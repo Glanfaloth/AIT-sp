@@ -92,7 +92,7 @@ class ProcGen(Controller):
                 "width": 1280,
                 "height": 720},]
         commands.extend([self.get_add_object(model_name=cup.name,
-                                                     position={"x": table_top[0] + 1.5, "y": table_top[1], "z": table_top[2] - 2},
+                                                     position={"x": table_x, "y": table_top[1], "z": table_z},
                                                      rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
                                                      object_id=self.get_unique_id()),])
         for chair_position in chair_positions:
