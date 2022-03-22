@@ -57,7 +57,6 @@ class ProcGen(Controller):
 
         table_extents = ProcGen.get_longest_extent(table)
         chair_extents = ProcGen.get_longest_extent(chair)
-        cup_extents = ProcGen.get_longest_extent(cup)
         table_placement_radius = table_extents + chair_extents + 1.15
         table_x = self.get_table_placement_coordinate(table_placement_radius)
         table_z = self.get_table_placement_coordinate(table_placement_radius)
@@ -71,9 +70,7 @@ class ProcGen(Controller):
                                  {"$type": "send_bounds",
                                   "frequency": "once",
                                   "ids": [table_id]}])
-        # We know tha this is the only output data on this frame.
         bounds = Bounds(resp[0])
-        # We know that the table is the only object in the output data.
         table_center = np.array(bounds.get_center(0))
       
         chair_positions = [self.get_chair_position(table_center=table_center,
@@ -85,7 +82,8 @@ class ProcGen(Controller):
                                    look_at=TDWUtils.array_to_vector3(table_top))
         path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("test")
         print(f"Images will be saved to: {path}")
-        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img"], path=path)
+        # The _id capture pass shows the segmentation colors of each object in the scene
+        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id"], path=path)
         self.add_ons.extend([camera, capture])
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
         commands = [{"$type": "set_screen_size",
