@@ -83,7 +83,7 @@ class ProcGen(Controller):
         path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("test")
         print(f"Images will be saved to: {path}")
         # The _id capture pass shows the segmentation colors of each object in the scene
-        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id"], path=path)
+        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id", "_depth", "_depth_simple", "_normals"], path=path)
         self.add_ons.extend([camera, capture])
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
         commands = [{"$type": "set_screen_size",
