@@ -13,7 +13,9 @@ class ProcGen(Controller):
     Using procedural generation, add a table to scene and add chairs around the table.
     """
 
-    def __init__(self, port: int = 1071, launch_build: bool = True, random_seed: int = 0):
+    def __init__(
+        self, port: int = 1071, launch_build: bool = True, random_seed: int = 0
+    ):
         super().__init__(port=port, launch_build=launch_build)
         self.rng: np.random.RandomState = np.random.RandomState(random_seed)
 
@@ -36,18 +38,24 @@ class ProcGen(Controller):
             q *= -1
         return q
 
-    def get_chair_position(self, table_center: np.array, table_bound_point: np.array) -> np.array:
+    def get_chair_position(
+        self, table_center: np.array, table_bound_point: np.array
+    ) -> np.array:
         position_to_center = table_bound_point - table_center
-        position_to_center_normalized = position_to_center / np.linalg.norm(position_to_center)
-        chair_position = table_bound_point + (position_to_center_normalized * self.rng.uniform(0.5, 0.125))
+        position_to_center_normalized = position_to_center / np.linalg.norm(
+            position_to_center
+        )
+        chair_position = table_bound_point + (
+            position_to_center_normalized * self.rng.uniform(0.5, 0.125)
+        )
         chair_position[1] = 0
         return chair_position
 
     def run(self) -> None:
         librarian = ModelLibrarian()
-        tables = librarian.get_all_models_in_wnid("n03201208") # dining table
+        tables = librarian.get_all_models_in_wnid("n03201208")  # dining table
         chairs = librarian.get_all_models_in_wnid("n03001627")
-        cups = librarian.get_all_models_in_wnid("n03147509") # cup
+        cups = librarian.get_all_models_in_wnid("n03147509")  # cup
         tables = [record for record in tables if not record.do_not_use]
         chairs = [record for record in chairs if not record.do_not_use]
         cups = [record for record in cups if not record.do_not_use]
@@ -62,51 +70,90 @@ class ProcGen(Controller):
         table_z = self.get_table_placement_coordinate(table_placement_radius)
         table_id = self.get_unique_id()
 
-        resp = self.communicate([TDWUtils.create_empty_room(12, 12),
-                                 self.get_add_object(model_name=table.name,
-                                                     position={"x": table_x, "y": 0, "z": table_z},
-                                                     rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
-                                                     object_id=table_id),
-                                 {"$type": "send_bounds",
-                                  "frequency": "once",
-                                  "ids": [table_id]}])
+        resp = self.communicate(
+            [
+                # {"$type": "set_screen_size", "width": 1920, "height": 1080},
+                # {"$type": "set_render_quality", "render_quality": 5},
+                TDWUtils.create_empty_room(12, 12),
+                self.get_add_object(
+                    model_name=table.name,
+                    position={"x": table_x, "y": 0, "z": table_z},
+                    rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
+                    object_id=table_id,
+                ),
+                {"$type": "send_bounds", "frequency": "once", "ids": [table_id]},
+            ]
+        )
         bounds = Bounds(resp[0])
         table_center = np.array(bounds.get_center(0))
-      
-        chair_positions = [self.get_chair_position(table_center=table_center,
-                                                   table_bound_point=np.array(bounds.get_left(0))),
-                           self.get_chair_position(table_center=table_center,
-                                                   table_bound_point=np.array(bounds.get_right(0))),]
+
+        chair_positions = [
+            self.get_chair_position(
+                table_center=table_center,
+                table_bound_point=np.array(bounds.get_left(0)),
+            ),
+            self.get_chair_position(
+                table_center=table_center,
+                table_bound_point=np.array(bounds.get_right(0)),
+            ),
+        ]
         table_top = bounds.get_top(0)
-        camera = ThirdPersonCamera(position={"x": table_top[0] + 1.5, "y": table_top[1] + 0.7, "z": table_top[2] - 2},
-                                   look_at=TDWUtils.array_to_vector3(table_top))
+        camera = ThirdPersonCamera(
+            position={
+                "x": table_top[0] + 1.5,
+                "y": table_top[1] + 0.7,
+                "z": table_top[2] - 2,
+            },
+            look_at=TDWUtils.array_to_vector3(table_top),
+        )
         path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("test")
         print(f"Images will be saved to: {path}")
         # The _id capture pass shows the segmentation colors of each object in the scene
-        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id", "_depth", "_depth_simple", "_normals"], path=path)
+        capture = ImageCapture(
+            avatar_ids=[camera.avatar_id],
+            pass_masks=["_img", "_id", "_depth", "_depth_simple", "_normals"],
+            path=path,
+        )
         self.add_ons.extend([camera, capture])
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
-        commands = [{"$type": "set_screen_size",
-                "width": 1280,
-                "height": 720},]
-        commands.extend([self.get_add_object(model_name=cup.name,
-                                                     position={"x": table_x, "y": table_top[1], "z": table_z},
-                                                     rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
-                                                     object_id=self.get_unique_id()),])
+        commands = [
+            {"$type": "set_screen_size", "width": 1280, "height": 720},
+        ]
+        commands.extend(
+            [
+                self.get_add_object(
+                    model_name=cup.name,
+                    position={"x": table_x, "y": table_top[1], "z": table_z},
+                    rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
+                    object_id=self.get_unique_id(),
+                ),
+            ]
+        )
         for chair_position in chair_positions:
             object_id = self.get_unique_id()
-            commands.extend([self.get_add_object(model_name=chair.name,
-                                                 position=TDWUtils.array_to_vector3(chair_position),
-                                                 object_id=object_id),
-                             {"$type": "object_look_at_position",
-                              "position": table_bottom,
-                              "id": object_id},
-                             {"$type": "rotate_object_by",
-                              "angle": float(self.rng.uniform(-20, 20)),
-                              "id": object_id,
-                              "axis": "yaw"}])
+            commands.extend(
+                [
+                    self.get_add_object(
+                        model_name=chair.name,
+                        position=TDWUtils.array_to_vector3(chair_position),
+                        object_id=object_id,
+                    ),
+                    {
+                        "$type": "object_look_at_position",
+                        "position": table_bottom,
+                        "id": object_id,
+                    },
+                    {
+                        "$type": "rotate_object_by",
+                        "angle": float(self.rng.uniform(-20, 20)),
+                        "id": object_id,
+                        "axis": "yaw",
+                    },
+                ]
+            )
         self.communicate(commands)
         self.communicate({"$type": "terminate"})
+
 
 if __name__ == "__main__":
     c = ProcGen()
