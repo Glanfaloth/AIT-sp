@@ -1,4 +1,5 @@
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 from tdw.librarian import ModelLibrarian, ModelRecord
 from tdw.controller import Controller
@@ -34,8 +35,8 @@ class ProcGen(Controller):
             return front_back
 
     def get_table_placement_coordinate(self, radius: float) -> float:
-        q = float(self.rng.uniform(0, 6 - radius))
-        if self.rng.random() < 0.5:
+        q = float(random.uniform(0, 6 - radius))
+        if random.random() < 0.5:
             q *= -1
         return q
 
@@ -47,7 +48,7 @@ class ProcGen(Controller):
             position_to_center
         )
         chair_position = table_bound_point + (
-            position_to_center_normalized * self.rng.uniform(0.5, 0.125)
+            position_to_center_normalized * random.uniform(0.5, 0.125)
         )
         chair_position[1] = 0
         return chair_position
@@ -60,9 +61,9 @@ class ProcGen(Controller):
         tables = [record for record in tables if not record.do_not_use]
         chairs = [record for record in chairs if not record.do_not_use]
         cups = [record for record in cups if not record.do_not_use]
-        table = tables[self.rng.randint(0, len(tables))]
-        chair = chairs[self.rng.randint(0, len(chairs))]
-        cup = cups[self.rng.randint(0, len(cups))]
+        table = tables[random.randint(0, len(tables) - 1)]
+        chair = chairs[random.randint(0, len(chairs) - 1)]
+        cup = cups[random.randint(0, len(cups) - 1)]
 
         table_extents = ProcGen.get_longest_extent(table)
         chair_extents = ProcGen.get_longest_extent(chair)
@@ -77,7 +78,7 @@ class ProcGen(Controller):
                 self.get_add_object(
                     model_name=table.name,
                     position={"x": table_x, "y": 0, "z": table_z},
-                    rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
+                    rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                     object_id=table_id,
                 ),
                 {"$type": "send_bounds", "frequency": "once", "ids": [table_id]},
@@ -124,7 +125,7 @@ class ProcGen(Controller):
                 self.get_add_object(
                     model_name=cup.name,
                     position={"x": table_x, "y": table_top[1], "z": table_z},
-                    rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
+                    rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                     object_id=self.get_unique_id(),
                 ),
             ]
@@ -138,7 +139,7 @@ class ProcGen(Controller):
                               "position": table_bottom,
                               "id": object_id},
                              {"$type": "rotate_object_by",
-                              "angle": float(self.rng.uniform(-20, 20)),
+                              "angle": float(random.uniform(-20, 20)),
                               "id": object_id,
                               "axis": "yaw"}])
         resp = self.communicate(commands)

@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from tdw.librarian import ModelLibrarian, ModelRecord
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
@@ -31,15 +32,15 @@ class ProcGen(Controller):
             return front_back
 
     def get_table_placement_coordinate(self, radius: float) -> float:
-        q = float(self.rng.uniform(0, 6 - radius))
-        if self.rng.random() < 0.5:
+        q = float(random.uniform(0, 6 - radius))
+        if random.random() < 0.5:
             q *= -1
         return q
 
     def get_chair_position(self, table_center: np.array, table_bound_point: np.array) -> np.array:
         position_to_center = table_bound_point - table_center
         position_to_center_normalized = position_to_center / np.linalg.norm(position_to_center)
-        chair_position = table_bound_point + (position_to_center_normalized * self.rng.uniform(0.5, 0.125))
+        chair_position = table_bound_point + (position_to_center_normalized * random.uniform(0.5, 0.125))
         chair_position[1] = 0
         return chair_position
 
@@ -48,9 +49,10 @@ class ProcGen(Controller):
         tables = librarian.get_all_models_in_wnid("n04379243")
         chairs = librarian.get_all_models_in_wnid("n03001627")
         tables = [record for record in tables if not record.do_not_use]
+        print(len(tables))
         chairs = [record for record in chairs if not record.do_not_use]
-        table = tables[self.rng.randint(0, len(tables))]
-        chair = chairs[self.rng.randint(0, len(chairs))]
+        table = tables[random.randint(0, len(tables) - 1)]
+        chair = chairs[random.randint(0, len(chairs) - 1)]
 
         table_extents = ProcGen.get_longest_extent(table)
         chair_extents = ProcGen.get_longest_extent(chair)
@@ -62,7 +64,7 @@ class ProcGen(Controller):
         resp = self.communicate([TDWUtils.create_empty_room(12, 12),
                                  self.get_add_object(model_name=table.name,
                                                      position={"x": table_x, "y": 0, "z": table_z},
-                                                     rotation={"x": 0, "y": float(self.rng.uniform(-360, 360)), "z": 0},
+                                                     rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                                                      object_id=table_id),
                                  {"$type": "send_bounds",
                                   "frequency": "once",
@@ -97,7 +99,7 @@ class ProcGen(Controller):
                               "position": table_bottom,
                               "id": object_id},
                              {"$type": "rotate_object_by",
-                              "angle": float(self.rng.uniform(-20, 20)),
+                              "angle": float(random.uniform(-20, 20)),
                               "id": object_id,
                               "axis": "yaw"}])
         self.communicate(commands)
