@@ -1,8 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from tdw.librarian import ModelLibrarian, ModelRecord
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
-from tdw.output_data import Bounds
+from tdw.output_data import Bounds, OutputData, CameraMatrices
 from tdw.add_ons.third_person_camera import ThirdPersonCamera
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
@@ -79,11 +80,11 @@ class ProcGen(Controller):
                                                    table_bound_point=np.array(bounds.get_right(0))),]
         table_top = bounds.get_top(0)
         camera = ThirdPersonCamera(position={"x": table_top[0] + 1.5, "y": table_top[1] + 0.7, "z": table_top[2] - 2},
-                                   look_at=TDWUtils.array_to_vector3(table_top))
+                                   look_at=TDWUtils.array_to_vector3(table_top), avatar_id="a")
         path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("test")
         print(f"Images will be saved to: {path}")
         # The _id capture pass shows the segmentation colors of each object in the scene
-        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id", "_depth", "_depth_simple", "_normals"], path=path)
+        capture = ImageCapture(avatar_ids=[camera.avatar_id], pass_masks=["_img", "_id", "_depth", "_normals"], path=path)
         self.add_ons.extend([camera, capture])
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
         commands = [{"$type": "set_screen_size",
@@ -105,9 +106,22 @@ class ProcGen(Controller):
                               "angle": float(self.rng.uniform(-20, 20)),
                               "id": object_id,
                               "axis": "yaw"}])
-        self.communicate(commands)
-        self.communicate({"$type": "terminate"})
+        resp = self.communicate(commands)
+        # Get the camera matrix.
+        camera_matrix = None
+        for i in range(len(resp) - 1):
+            r_id = OutputData.get_data_type_id(resp[i])
+            if r_id == "cama":
+                camera_matrix = CameraMatrices(resp[i]).get_camera_matrix()
+        images = capture.images["a"]
+        for i in range(images.get_num_passes()):
+            if images.get_pass_mask(i) == "_depth":
+                # Get the depth values.
+                depth_values = TDWUtils.get_depth_values(images.get_image(i), depth_pass="_depth", width=images.get_width(), height=images.get_height())
 
+                # Comment out these two lines on a Linux server.
+                plt.imshow(depth_values)
+                plt.show()
 if __name__ == "__main__":
     c = ProcGen()
     c.run()
