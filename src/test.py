@@ -73,8 +73,6 @@ class ProcGen(Controller):
 
         resp = self.communicate(
             [
-                # {"$type": "set_screen_size", "width": 1920, "height": 1080},
-                # {"$type": "set_render_quality", "render_quality": 5},
                 TDWUtils.create_empty_room(12, 12),
                 self.get_add_object(
                     model_name=table.name,
@@ -113,7 +111,7 @@ class ProcGen(Controller):
         # The _id capture pass shows the segmentation colors of each object in the scene
         capture = ImageCapture(
             avatar_ids=[camera.avatar_id],
-            pass_masks=["_img", "_id", "_depth", "_depth_simple", "_normals"],
+            pass_masks=["_img", "_id", "_depth"],
             path=path,
         )
         self.add_ons.extend([camera, capture])
@@ -156,8 +154,8 @@ class ProcGen(Controller):
                 # Get the depth values.
                 depth_values = TDWUtils.get_depth_values(images.get_image(i), depth_pass="_depth", width=images.get_width(), height=images.get_height())
 
-                # Comment out these two lines on a Linux server.
                 plt.imshow(depth_values)
+                plt.savefig("depth.png")
                 plt.show()
 if __name__ == "__main__":
     c = ProcGen()
