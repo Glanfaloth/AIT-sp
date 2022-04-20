@@ -52,12 +52,12 @@ class OculusTouchImageCapture(Controller):
         # Send the commands.
         self.communicate(commands)
         # Set image capture so that it doesn't save images.
-        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"], save=False)
+        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"], save=True)
         # Loop until the Escape key is pressed.
         while not self.done:
             visible_objects = []
             # Get an array of all of the unique segmentation colors in the _id pass.
-            segmentation_colors = TDWUtils.get_segmentation_colors(id_pass=self.image_capture.images["_id"])
+            segmentation_colors = TDWUtils.get_segmentation_colors(id_pass=self.image_capture.images["_img"])
             for segmentation_color in segmentation_colors:
                 # Convert to tuples to enable equality testing.
                 sc = tuple(segmentation_color)
