@@ -20,7 +20,7 @@ class OculusTouchCompositeObject(Controller):
         self.add_ons.append(self.vr)
 
     def run(self) -> None:
-        self.communicate(Controller.get_add_physics_object(model_name="vm_v5_072_composite",
+        self.communicate(Controller.get_add_physics_object(model_name="b03_bosch_cbg675bs1b_2013__vray_composite",
                                                            object_id=Controller.get_unique_id(),
                                                            position={"x": 0, "y": 0.7, "z": 0.9},
                                                            kinematic=True))
