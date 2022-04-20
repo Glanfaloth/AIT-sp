@@ -32,9 +32,9 @@ class OculusTouchTestScene(Controller):
         self.trial_done = False
         self.vr = OculusTouch()
         # Quit when the left trigger button is pressed.
-        self.vr.listen_to_button(
-            button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
-        )
+        # self.vr.listen_to_button(
+        #     button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
+        # )
         # End the trial when the right trigger button is pressed.
         self.vr.listen_to_button(
             button=OculusTouchButton.trigger_button,
@@ -88,8 +88,8 @@ class OculusTouchTestScene(Controller):
         table_extents = OculusTouchTestScene.get_longest_extent(table)
         chair_extents = OculusTouchTestScene.get_longest_extent(chair)
         table_placement_radius = table_extents + chair_extents + 1.15
-        table_x = self.get_table_placement_coordinate(table_placement_radius)
-        table_z = self.get_table_placement_coordinate(table_placement_radius)
+        table_x = 1
+        table_z = 0
         table_id = self.get_unique_id()
         # Add the model.
 
