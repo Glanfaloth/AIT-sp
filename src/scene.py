@@ -30,7 +30,7 @@ class OculusTouchTestScene(Controller):
         )
         self.simulation_done = False
         self.trial_done = False
-        self.vr = OculusTouch()
+        self.vr = OculusTouch(set_graspable=False)
         # Quit when the left trigger button is pressed.
         # self.vr.listen_to_button(
         #     button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
