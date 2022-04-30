@@ -64,7 +64,6 @@ class ProcGen(Controller):
         table = tables[random.randint(0, len(tables) - 1)]
         chair = chairs[random.randint(0, len(chairs) - 1)]
         cup = cups[random.randint(0, len(cups) - 1)]
-
         table_extents = ProcGen.get_longest_extent(table)
         chair_extents = ProcGen.get_longest_extent(chair)
         table_placement_radius = table_extents + chair_extents + 1.15

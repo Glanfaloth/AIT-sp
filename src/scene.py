@@ -15,13 +15,11 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 import constants
 
 class OculusTouchTestScene(Controller):
-    librarian = ModelLibrarian()
+    librarian = ModelLibrarian()    
     
-    chairs = librarian.get_all_models_in_wnid("n03001627")
-    cups = librarian.get_all_models_in_wnid("n03147509")  # cup
     TABLES = constants.TABLES
-    CHAIRS = [record for record in chairs if not record.do_not_use]
-    CUPS = [record for record in cups if not record.do_not_use]
+    CHAIRS = constants.CHAIRS
+    CUPS = constants.CUPS
 
     def __init__(
         self, port: int = 1071, check_version: bool = True, launch_build: bool = True
@@ -93,7 +91,6 @@ class OculusTouchTestScene(Controller):
         table_z = 0
         table_id = self.get_unique_id()
         # Add the model.
-
         resp = self.communicate(
             [
                 self.get_add_object(
