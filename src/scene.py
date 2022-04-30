@@ -30,7 +30,7 @@ class OculusTouchTestScene(Controller):
         )
         self.simulation_done = False
         self.trial_done = False
-        self.vr = OculusTouch(set_graspable=False)
+        self.vr = OculusTouch(set_graspable=False, attach_avatar=True)
         # Quit when the left trigger button is pressed.
         # self.vr.listen_to_button(
         #     button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
@@ -42,7 +42,16 @@ class OculusTouchTestScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.communicate(TDWUtils.create_empty_room(12, 12))
+        path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
+        print(f"Images will be save to: {path.resolve()}")
+        capture = ImageCapture(path=path, avatar_ids=["vr"], pass_masks=["_id"])
+        self.add_ons.append(capture)
+        self.communicate(
+            [
+                TDWUtils.create_empty_room(12, 12),
+                {"$type": "set_target_framerate", "framerate": 30},
+            ]
+        )
 
     @staticmethod
     def get_longest_extent(record: ModelRecord) -> float:
@@ -94,7 +103,6 @@ class OculusTouchTestScene(Controller):
         # Add the model.
         resp = self.communicate(
             [
-                
                 {
                     "$type": "add_object",
                     "name": table.name,
@@ -181,7 +189,7 @@ class OculusTouchTestScene(Controller):
             )
 
         self.communicate(commands)
-        
+
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
             self.communicate([])
