@@ -14,9 +14,10 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 import constants
 
+
 class OculusTouchTestScene(Controller):
-    librarian = ModelLibrarian()    
-    
+    librarian = ModelLibrarian()
+
     TABLES = constants.TABLES
     CHAIRS = constants.CHAIRS
     CUPS = constants.CUPS
@@ -118,20 +119,12 @@ class OculusTouchTestScene(Controller):
         table_top = bounds.get_top(0)
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
 
-        cup_id_1 = self.get_unique_id()
-        cup_id_2 = self.get_unique_id()
-        commands = [
-            self.get_add_object(
-                model_name=cup.name,
-                position={"x": table_x - 0.2, "y": table_top[1], "z": table_z - 0.2},
-                rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
-                object_id=cup_id_1,
-            ),
-        ]
+        cup_id = self.get_unique_id()
+      
         commands.extend(
             self.get_add_physics_object(
                 model_name=cup.name,
-                object_id=cup_id_2,
+                object_id=cup_id,
                 position={"x": table_x - 0.3, "y": table_top[1], "z": table_z - 0.3},
                 rotation={"x": 0, "y": 0, "z": 0},
             ),
@@ -140,14 +133,15 @@ class OculusTouchTestScene(Controller):
         for chair_position in chair_positions:
             object_id = self.get_unique_id()
             chair_ids.append(object_id)
-            commands.extend( self.get_add_physics_object(
-                        model_name=chair.name,
-                        position=TDWUtils.array_to_vector3(chair_position),
-                        object_id=object_id,
-                    ),)
+            commands.extend(
+                self.get_add_physics_object(
+                    model_name=chair.name,
+                    position=TDWUtils.array_to_vector3(chair_position),
+                    object_id=object_id,
+                ),
+            )
             commands.extend(
                 [
-                   
                     {
                         "$type": "object_look_at_position",
                         "position": table_bottom,
@@ -170,8 +164,7 @@ class OculusTouchTestScene(Controller):
         self.communicate(
             [
                 {"$type": "destroy_object", "id": table_id},
-                {"$type": "destroy_object", "id": cup_id_1},
-                {"$type": "destroy_object", "id": cup_id_2},
+                {"$type": "destroy_object", "id": cup_id},
             ]
         )
         for chair_id in chair_ids:
