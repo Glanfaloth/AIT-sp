@@ -94,12 +94,36 @@ class OculusTouchTestScene(Controller):
         # Add the model.
         resp = self.communicate(
             [
-                self.get_add_object(
-                    model_name=table.name,
-                    position={"x": table_x, "y": 0, "z": table_z},
-                    rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
-                    object_id=table_id,
-                ),
+                
+                {
+                    "$type": "add_object",
+                    "name": table.name,
+                    "url": "https://tdw-public.s3.amazonaws.com/models/windows/2018-2019.1/"
+                    + table.name,
+                    "scale_factor": 1.0,
+                    "position": {"x": table_x, "y": 0, "z": table_z},
+                    "category": "table",
+                    "id": table_id,
+                },
+                {
+                    "$type": "rotate_object_to_euler_angles",
+                    "euler_angles": {"x": 0, "y": 0, "z": 0},
+                    "id": table_id,
+                },
+                {
+                    "$type": "set_kinematic_state",
+                    "id": table_id,
+                    "is_kinematic": False,
+                    "use_gravity": True,
+                },
+                {"$type": "set_mass", "mass": 50, "id": table_id},
+                {
+                    "$type": "set_physic_material",
+                    "dynamic_friction": 0.45,
+                    "static_friction": 0.48,
+                    "bounciness": 0.5,
+                    "id": table_id,
+                },
                 {"$type": "send_bounds", "frequency": "once", "ids": [table_id]},
             ]
         )
@@ -120,7 +144,7 @@ class OculusTouchTestScene(Controller):
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
 
         cup_id = self.get_unique_id()
-      
+        commands = []
         commands.extend(
             self.get_add_physics_object(
                 model_name=cup.name,
@@ -157,6 +181,7 @@ class OculusTouchTestScene(Controller):
             )
 
         self.communicate(commands)
+        
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
             self.communicate([])
