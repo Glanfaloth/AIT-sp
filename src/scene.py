@@ -140,13 +140,14 @@ class OculusTouchTestScene(Controller):
         for chair_position in chair_positions:
             object_id = self.get_unique_id()
             chair_ids.append(object_id)
-            commands.extend(
-                [
-                    self.get_add_object(
+            commands.extend( self.get_add_physics_object(
                         model_name=chair.name,
                         position=TDWUtils.array_to_vector3(chair_position),
                         object_id=object_id,
-                    ),
+                    ),)
+            commands.extend(
+                [
+                   
                     {
                         "$type": "object_look_at_position",
                         "position": table_bottom,
