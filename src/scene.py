@@ -12,13 +12,14 @@ from tdw.add_ons.third_person_camera import ThirdPersonCamera
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
+import constants
 
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
-    tables = librarian.get_all_models_in_wnid("n03201208")  # dining table
+    
     chairs = librarian.get_all_models_in_wnid("n03001627")
     cups = librarian.get_all_models_in_wnid("n03147509")  # cup
-    TABLES = [record for record in tables if not record.do_not_use]
+    TABLES = constants.TABLES
     CHAIRS = [record for record in chairs if not record.do_not_use]
     CUPS = [record for record in cups if not record.do_not_use]
 
@@ -71,7 +72,7 @@ class OculusTouchTestScene(Controller):
             position_to_center
         )
         chair_position = table_bound_point + (
-            position_to_center_normalized * random.uniform(0.5, 0.125)
+            position_to_center_normalized * random.uniform(1, 0.25)
         )
         chair_position[1] = 0
         return chair_position
@@ -120,15 +121,24 @@ class OculusTouchTestScene(Controller):
         table_top = bounds.get_top(0)
         table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
 
-        cup_id = self.get_unique_id()
+        cup_id_1 = self.get_unique_id()
+        cup_id_2 = self.get_unique_id()
         commands = [
             self.get_add_object(
                 model_name=cup.name,
-                position={"x": table_x, "y": table_top[1], "z": table_z},
+                position={"x": table_x - 0.2, "y": table_top[1], "z": table_z - 0.2},
                 rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
-                object_id=cup_id,
-            )
+                object_id=cup_id_1,
+            ),
         ]
+        commands.extend(
+            self.get_add_physics_object(
+                model_name=cup.name,
+                object_id=cup_id_2,
+                position={"x": table_x - 0.3, "y": table_top[1], "z": table_z - 0.3},
+                rotation={"x": 0, "y": 0, "z": 0},
+            ),
+        )
         chair_ids = []
         for chair_position in chair_positions:
             object_id = self.get_unique_id()
@@ -153,6 +163,7 @@ class OculusTouchTestScene(Controller):
                     },
                 ]
             )
+
         self.communicate(commands)
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
@@ -161,7 +172,8 @@ class OculusTouchTestScene(Controller):
         self.communicate(
             [
                 {"$type": "destroy_object", "id": table_id},
-                {"$type": "destroy_object", "id": cup_id},
+                {"$type": "destroy_object", "id": cup_id_1},
+                {"$type": "destroy_object", "id": cup_id_2},
             ]
         )
         for chair_id in chair_ids:
