@@ -43,7 +43,7 @@ class OculusTouchTestScene(Controller):
         )
         self.add_ons.extend([self.vr])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
-        self.capture = ImageCapture(path=self.path, avatar_ids=["vr"], pass_masks=["_img"])
+        self.capture = ImageCapture(path=self.path, avatar_ids=["vr"], pass_masks=["_depth"])
         self.add_ons.append(self.capture)
         self.communicate(
             [
@@ -194,11 +194,11 @@ class OculusTouchTestScene(Controller):
             if images.get_pass_mask(i) == "_depth":
                 # Get the depth values.
                 depth_values = TDWUtils.get_depth_values(images.get_image(i), depth_pass="_depth", width=images.get_width(), height=images.get_height())
-                path = self.path.joinpath("depth")
-                num = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
-                plt.imshow(depth_values)
-                plt.savefig("depth.png")
-                plt.show()
+                # path = self.path.joinpath("depth")
+                # num = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
+                # plt.imshow(depth_values)
+                # plt.savefig("depth.png")
+                # plt.show()
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
