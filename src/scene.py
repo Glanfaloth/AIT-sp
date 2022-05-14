@@ -42,8 +42,8 @@ class OculusTouchTestScene(Controller):
             function=self.end_trial,
         )
         self.camera = ThirdPersonCamera(
-            position={"x": 2, "y": 2, "z": -1},
-            look_at={"x": 1, "y": 0, "z": 0},
+            position={"x": 0.5, "y": 2, "z": 0},
+            look_at={"x": 0, "y": 0, "z": 0.5},
             avatar_id="a",
         )
         self.add_ons.extend([self.vr, self.camera])
@@ -102,8 +102,8 @@ class OculusTouchTestScene(Controller):
         table_extents = OculusTouchTestScene.get_longest_extent(table)
         chair_extents = OculusTouchTestScene.get_longest_extent(chair)
         table_placement_radius = table_extents + chair_extents + 1.15
-        table_x = 1
-        table_z = 0
+        table_x = 0
+        table_z = 0.5
         table_id = self.get_unique_id()
         # Add the model.
         resp = self.communicate(
@@ -195,20 +195,20 @@ class OculusTouchTestScene(Controller):
 
         self.communicate(commands)
 
-        images = self.capture.images["a"]
+        self.images = self.capture.images["a"]
 
-        for i in range(images.get_num_passes()):
-            if images.get_pass_mask(i) == "_depth":
-                # Get the depth values.
-                depth_values = TDWUtils.get_depth_values(images.get_image(i), depth_pass="_depth", width=images.get_width(), height=images.get_height())
-                path = os.path.join(self.path, "a", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
-                plt.imshow(depth_values)
-                plt.savefig(path)
-                plt.show()
+        
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
             self.communicate([])
+            for i in range(self.images.get_num_passes()):
+                if self.images.get_pass_mask(i) == "_depth":
+                    # Get the depth values.
+                    depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
+                    path = os.path.join(self.path, "a", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
+                    plt.imshow(depth_values)
+                    plt.savefig(path)
             self.frame += 1
         # Destroy the object.
         self.communicate(
