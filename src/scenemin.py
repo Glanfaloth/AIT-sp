@@ -35,10 +35,10 @@ class OculusTouchTestScene(Controller):
             is_left=False,
             function=self.end_trial,
         )
-        self.add_ons.extend([self.vr])
+        
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture_min")
-        self.capture = ImageCapture(path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"])
-        self.add_ons.append(self.capture)
+        self.capture = ImageCapture(path=self.path, avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img", "_id"])
+        self.add_ons.extend([self.vr, self.capture])
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
@@ -58,6 +58,7 @@ class OculusTouchTestScene(Controller):
                                 position={"x": 0, "y": 0, "z": 0.5})])
 
         images = self.capture.images["vr"]
+        # self.capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img", "_id"], save=True)
         # for i in range(images.get_num_passes()):
         #     if images.get_pass_mask(i) == "_depth":
         #         # Get the depth values.

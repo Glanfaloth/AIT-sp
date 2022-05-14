@@ -52,19 +52,12 @@ class OculusTouchImageCapture(Controller):
         # Send the commands.
         self.communicate(commands)
         # Set image capture so that it doesn't save images.
-        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"], save=True)
+        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"], save=False)
         # Loop until the Escape key is pressed.
         while not self.done:
             visible_objects = []
-            # Get an array of all of the unique segmentation colors in the _id pass.
-            segmentation_colors = TDWUtils.get_segmentation_colors(id_pass=self.image_capture.images["_img"])
-            for segmentation_color in segmentation_colors:
-                # Convert to tuples to enable equality testing.
-                sc = tuple(segmentation_color)
-                for object_id in self.object_manager.objects_static:
-                    if tuple(self.object_manager.objects_static[object_id].segmentation_color) == sc:
-                        visible_objects.append(object_id)
-                        break
+            for object_id in self.object_manager.objects_static:
+                visible_objects.append(object_id)
             # Record this frame.
             self.frame_data.append({"head_rotation": self.vr.head.rotation,
                                     "visible_objects": visible_objects})
@@ -75,7 +68,7 @@ class OculusTouchImageCapture(Controller):
     def quit(self):
         self.done = True
         # Write the record to disk.
-        Path("log.json").write_text(dumps(self.frame_data))
+        print(self.frame_data)
 
 
 if __name__ == "__main__":
