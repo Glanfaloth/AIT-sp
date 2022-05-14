@@ -13,7 +13,7 @@ from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 import constants
-
+import os
 
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
@@ -41,16 +41,22 @@ class OculusTouchTestScene(Controller):
             is_left=False,
             function=self.end_trial,
         )
-        self.add_ons.extend([self.vr])
+        self.camera = ThirdPersonCamera(
+            position={"x": 2, "y": 2, "z": -1},
+            look_at={"x": 1, "y": 0, "z": 0},
+            avatar_id="a",
+        )
+        self.add_ons.extend([self.vr, self.camera])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
-        self.capture = ImageCapture(path=self.path, avatar_ids=["vr"], pass_masks=["_depth"])
-        self.add_ons.append(self.capture)
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
-                {"$type": "set_target_framerate", "framerate": 60},
+                {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
+        self.capture = ImageCapture(path=self.path, avatar_ids=["a"], pass_masks=["_img", "_id", "_depth"])
+        self.add_ons.append(self.capture)
+        self.frame = 0
 
     @staticmethod
     def get_longest_extent(record: ModelRecord) -> float:
@@ -189,20 +195,21 @@ class OculusTouchTestScene(Controller):
 
         self.communicate(commands)
 
-        images = self.capture.images["vr"]
+        images = self.capture.images["a"]
+
         for i in range(images.get_num_passes()):
             if images.get_pass_mask(i) == "_depth":
                 # Get the depth values.
                 depth_values = TDWUtils.get_depth_values(images.get_image(i), depth_pass="_depth", width=images.get_width(), height=images.get_height())
-                # path = self.path.joinpath("depth")
-                # num = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
-                # plt.imshow(depth_values)
-                # plt.savefig("depth.png")
-                # plt.show()
+                path = os.path.join(self.path, "a", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
+                plt.imshow(depth_values)
+                plt.savefig(path)
+                plt.show()
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
             self.communicate([])
+            self.frame += 1
         # Destroy the object.
         self.communicate(
             [
@@ -224,9 +231,11 @@ class OculusTouchTestScene(Controller):
 
     def quit(self):
         self.simulation_done = True
+        self.frame = 0
 
     def end_trial(self):
         self.trial_done = True
+        self.frame = 0
 
 
 if __name__ == "__main__":

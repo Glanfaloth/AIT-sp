@@ -25,6 +25,11 @@ class OculusTouchTestScene(Controller):
         self.simulation_done = False
         self.trial_done = False
         self.vr = OculusTouch(set_graspable=False, attach_avatar=True)
+        self.camera = ThirdPersonCamera(
+            position={"x": 2, "y": 1.6, "z": -1},
+            look_at={"x": 0, "y": 0, "z": 0},
+            avatar_id="a",
+        )
         # Quit when the left trigger button is pressed.
         # self.vr.listen_to_button(
         #     button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
@@ -37,14 +42,16 @@ class OculusTouchTestScene(Controller):
         )
         
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture_min")
-        self.capture = ImageCapture(path=self.path, avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img", "_id"])
-        self.add_ons.extend([self.vr, self.capture])
+        self.add_ons.extend([self.vr, self.camera])
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
                 {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
+        self.capture = ImageCapture(path=self.path, avatar_ids=["a"], pass_masks=["_img", "_id", "_depth"])
+        self.add_ons.append(self.capture)
+        
 
     def trial(self) -> None:
         self.vr.reset()
@@ -57,7 +64,6 @@ class OculusTouchTestScene(Controller):
                                 object_id=object_id,
                                 position={"x": 0, "y": 0, "z": 0.5})])
 
-        images = self.capture.images["vr"]
         # self.capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img", "_id"], save=True)
         # for i in range(images.get_num_passes()):
         #     if images.get_pass_mask(i) == "_depth":

@@ -5,6 +5,8 @@ from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.third_person_camera import ThirdPersonCamera
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
+from tdw.add_ons.oculus_touch import OculusTouch
+
 
 c = Controller()
 camera = ThirdPersonCamera(
@@ -12,6 +14,8 @@ camera = ThirdPersonCamera(
     look_at={"x": 0, "y": 0, "z": 0},
     avatar_id="a",
 )
+vr = OculusTouch()
+c.add_ons.append(vr)
 c.add_ons.append(camera)
 path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_only_video")
 print(f"Images will be save to: {path.resolve()}")
