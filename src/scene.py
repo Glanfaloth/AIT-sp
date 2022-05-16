@@ -153,12 +153,31 @@ class OculusTouchTestScene(Controller):
             ),
         ]
         cup_id = self.get_unique_id()
+        computer_id = self.get_unique_id()
+        self.communicate(
+            [
+                self.get_add_object(
+                    model_name="macbook_air",
+                    object_id=computer_id,
+                    position={
+                        "x": table_x + 0.2,
+                        "y": table_top[1],
+                        "z": table_z,
+                    },
+                    rotation={"x": 0, "y": 180, "z": 0},
+                ),
+            ]
+        )
         commands = []
         commands.extend(
             self.get_add_physics_object(
                 model_name=cup.name,
                 object_id=cup_id,
-                position={"x": table_x - 0.3, "y": table_top[1], "z": table_z - 0.3},
+                position={
+                    "x": table_x - 0.3,
+                    "y": table_top[1],
+                    "z": table_z - 0.3,
+                },
                 rotation={"x": 0, "y": 0, "z": 0},
             ),
         )
@@ -190,7 +209,7 @@ class OculusTouchTestScene(Controller):
             )
 
         self.communicate(commands)
-
+       
         # self.images = self.capture.images["vr"]
 
         # Wait until the trial is done.
@@ -209,6 +228,7 @@ class OculusTouchTestScene(Controller):
             [
                 {"$type": "destroy_object", "id": table_id},
                 {"$type": "destroy_object", "id": cup_id},
+                {"$type": "destroy_object", "id": computer_id},
             ]
         )
         for chair_id in chair_ids:
