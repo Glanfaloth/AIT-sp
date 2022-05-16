@@ -23,7 +23,7 @@ class OculusTouchImageCapture(Controller):
         # Quit when the left trigger button is pressed.
         self.vr.listen_to_button(button=OculusTouchButton.trigger_button, is_left=True, function=self.quit)
         # Enable image capture.
-        self.image_capture = ImageCapture(avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"],
+        self.image_capture = ImageCapture(avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img"],
                                           path=EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("vr_observed_objects"))
         # Add an object manager just to get the static object data.
         self.object_manager = ObjectManager(transforms=False, rigidbodies=False, bounds=False)
@@ -52,7 +52,7 @@ class OculusTouchImageCapture(Controller):
         # Send the commands.
         self.communicate(commands)
         # Set image capture so that it doesn't save images.
-        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_id"], save=False)
+        self.image_capture.set(frequency="always", avatar_ids=[OculusTouch.AVATAR_ID], pass_masks=["_img"], save=True)
         # Loop until the Escape key is pressed.
         while not self.done:
             visible_objects = []
@@ -67,8 +67,6 @@ class OculusTouchImageCapture(Controller):
 
     def quit(self):
         self.done = True
-        # Write the record to disk.
-        print(self.frame_data)
 
 
 if __name__ == "__main__":

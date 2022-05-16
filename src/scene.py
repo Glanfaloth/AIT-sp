@@ -15,6 +15,7 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 import constants
 import os
 
+
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
 
@@ -32,21 +33,16 @@ class OculusTouchTestScene(Controller):
         self.trial_done = False
         self.vr = OculusTouch(set_graspable=False, attach_avatar=True)
         # Quit when the left trigger button is pressed.
-        # self.vr.listen_to_button(
-        #     button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
-        # )
+        self.vr.listen_to_button(
+            button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
+        )
         # End the trial when the right trigger button is pressed.
         self.vr.listen_to_button(
             button=OculusTouchButton.trigger_button,
             is_left=False,
             function=self.end_trial,
         )
-        self.camera = ThirdPersonCamera(
-            position={"x": 0.5, "y": 2, "z": 0},
-            look_at={"x": 0, "y": 0, "z": 0.5},
-            avatar_id="a",
-        )
-        self.add_ons.extend([self.vr, self.camera])
+        self.add_ons.extend([self.vr])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
         self.communicate(
             [
@@ -54,7 +50,9 @@ class OculusTouchTestScene(Controller):
                 {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
-        self.capture = ImageCapture(path=self.path, avatar_ids=["a"], pass_masks=["_img", "_id", "_depth"])
+        self.capture = ImageCapture(
+            path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
+        )
         self.add_ons.append(self.capture)
         self.frame = 0
 
@@ -99,11 +97,8 @@ class OculusTouchTestScene(Controller):
         chair = random.choice(OculusTouchTestScene.CHAIRS)
         cup = random.choice(OculusTouchTestScene.CUPS)
 
-        table_extents = OculusTouchTestScene.get_longest_extent(table)
-        chair_extents = OculusTouchTestScene.get_longest_extent(chair)
-        table_placement_radius = table_extents + chair_extents + 1.15
         table_x = 0
-        table_z = 0.5
+        table_z = 1
         table_id = self.get_unique_id()
         # Add the model.
         resp = self.communicate(
@@ -140,22 +135,23 @@ class OculusTouchTestScene(Controller):
                 {"$type": "send_bounds", "frequency": "once", "ids": [table_id]},
             ]
         )
+
         bounds = Bounds(resp[0])
         table_center = np.array(bounds.get_center(0))
-
+        table_left = np.array(bounds.get_left(0))
+        table_right = np.array(bounds.get_right(0))
+        table_top = bounds.get_top(0)
+        table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
         chair_positions = [
             self.get_chair_position(
                 table_center=table_center,
-                table_bound_point=np.array(bounds.get_left(0)),
+                table_bound_point=table_left,
             ),
             self.get_chair_position(
                 table_center=table_center,
-                table_bound_point=np.array(bounds.get_right(0)),
+                table_bound_point=table_right,
             ),
         ]
-        table_top = bounds.get_top(0)
-        table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
-
         cup_id = self.get_unique_id()
         commands = []
         commands.extend(
@@ -195,21 +191,19 @@ class OculusTouchTestScene(Controller):
 
         self.communicate(commands)
 
-        self.images = self.capture.images["a"]
-
-        
+        # self.images = self.capture.images["vr"]
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
+            # for i in range(self.images.get_num_passes()):
+            #     if self.images.get_pass_mask(i) == "_depth":
+            #         # Get the depth values.
+            #         depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
+            #         path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
+            #         plt.imshow(depth_values)
+            #         plt.savefig(path)
+            # self.frame += 1
             self.communicate([])
-            for i in range(self.images.get_num_passes()):
-                if self.images.get_pass_mask(i) == "_depth":
-                    # Get the depth values.
-                    depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
-                    path = os.path.join(self.path, "a", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
-                    plt.imshow(depth_values)
-                    plt.savefig(path)
-            self.frame += 1
         # Destroy the object.
         self.communicate(
             [
