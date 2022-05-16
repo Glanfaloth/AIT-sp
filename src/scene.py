@@ -22,6 +22,7 @@ class OculusTouchTestScene(Controller):
     TABLES = constants.TABLES
     CHAIRS = constants.CHAIRS
     CUPS = constants.CUPS
+    LAMPS = constants.LAMPS
 
     def __init__(
         self, port: int = 1071, check_version: bool = True, launch_build: bool = True
@@ -96,7 +97,7 @@ class OculusTouchTestScene(Controller):
         table = random.choice(OculusTouchTestScene.TABLES)
         chair = random.choice(OculusTouchTestScene.CHAIRS)
         cup = random.choice(OculusTouchTestScene.CUPS)
-
+        lamp = random.choice(OculusTouchTestScene.LAMPS)
         table_x = 0
         table_z = 1
         table_id = self.get_unique_id()
@@ -154,6 +155,7 @@ class OculusTouchTestScene(Controller):
         ]
         cup_id = self.get_unique_id()
         computer_id = self.get_unique_id()
+        lamp_id = self.get_unique_id()
         self.communicate(
             [
                 self.get_add_object(
@@ -163,6 +165,16 @@ class OculusTouchTestScene(Controller):
                         "x": table_x + 0.2,
                         "y": table_top[1],
                         "z": table_z,
+                    },
+                    rotation={"x": 0, "y": 180, "z": 0},
+                ),
+                self.get_add_object(
+                    model_name=lamp.name,
+                    object_id=lamp_id,
+                    position={
+                        "x": table_left[0] - 0.3,
+                        "y": 0,
+                        "z": table_left[2] + 1,
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
@@ -229,6 +241,7 @@ class OculusTouchTestScene(Controller):
                 {"$type": "destroy_object", "id": table_id},
                 {"$type": "destroy_object", "id": cup_id},
                 {"$type": "destroy_object", "id": computer_id},
+                {"$type": "destroy_object", "id": lamp_id},
             ]
         )
         for chair_id in chair_ids:
