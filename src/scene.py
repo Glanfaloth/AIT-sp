@@ -51,7 +51,7 @@ class OculusTouchTestScene(Controller):
             ]
         )
         self.capture = ImageCapture(
-            path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
+            path=self.path, avatar_ids=["vr"], pass_masks=["_img"]
         )
         self.add_ons.append(self.capture)
         self.frame = 0
