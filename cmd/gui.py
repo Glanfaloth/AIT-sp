@@ -1,15 +1,28 @@
 import sys
 import os
 from tkinter import *
-
 root = Tk()
 
 root.title("Synthetic Data with ThreeDWorld")
+FRUITS = [
+    ("apple", "apple"),
+    ("banana1", "b03_banana_01_high"),
+    ("banana2", "b04_banana"),
+    ("banana3", "banana_fix2"),
+    ("orange", "b04_orange_00"),
+]
 
-def run():
-    os.system('python3 src\scene.py')
+fruit = StringVar()
+fruit.set("apple")
 
-btn = Button(root, text="Run", command=run)
+for text, type in FRUITS:
+    Radiobutton(root, text=text, variable=fruit, value=type).pack(anchor=W)
+
+def click(value):
+    os.system("python3 src\scene.py --fruit " + value)
+
+
+btn = Button(root, text="Run", command=click(fruit.get()))
 btn.pack()
 
 root.mainloop()

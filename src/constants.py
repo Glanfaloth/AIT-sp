@@ -38,8 +38,8 @@ LAMPS = [record for record in lamps if record.name in LAMP_NAMES]
 # trashbin
 # radiator_pub
 
-fruit_names = ["apple", "b03_banana_01_high", "b03_burger", "b04_banana", "b04_orange_00", "banana_fix2"]
+fruit_names = ["apple", "b03_banana_01_high", "b04_banana", "b04_orange_00", "banana_fix2"]
 
-bread_names = ["b03_loafbread", "bread"]
+bread_names = ["b03_loafbread", "bread", "b03_burger"]
 
 drink_names = ["102_pepsi_can_12_fl_oz_vray"]

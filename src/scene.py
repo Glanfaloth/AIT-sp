@@ -14,8 +14,11 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 import constants
 import os
+import argparse
 
-
+parser = argparse.ArgumentParser(description="add obj")
+parser.add_argument("--fruit", default="apple")
+args = parser.parse_args()
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
 
@@ -156,6 +159,7 @@ class OculusTouchTestScene(Controller):
         cup_id = self.get_unique_id()
         computer_id = self.get_unique_id()
         lamp_id = self.get_unique_id()
+        fruit_id = self.get_unique_id()
         self.communicate(
             [
                 self.get_add_object(
@@ -175,6 +179,17 @@ class OculusTouchTestScene(Controller):
                         "x": table_left[0] - 0.3,
                         "y": 0,
                         "z": table_left[2] + 1,
+                    },
+                    rotation={"x": 0, "y": 180, "z": 0},
+                ),
+
+                self.get_add_object(
+                    model_name=args.fruit,
+                    object_id=fruit_id,
+                    position={
+                        "x": table_left[0] + 0.3,
+                        "y": table_top[1],
+                        "z": table_left[2] + 0.1,
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
@@ -242,6 +257,7 @@ class OculusTouchTestScene(Controller):
                 {"$type": "destroy_object", "id": cup_id},
                 {"$type": "destroy_object", "id": computer_id},
                 {"$type": "destroy_object", "id": lamp_id},
+                {"$type": "destroy_object", "id": fruit_id},
             ]
         )
         for chair_id in chair_ids:
