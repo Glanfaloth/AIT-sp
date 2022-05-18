@@ -17,6 +17,7 @@ CHAIR_NAMES = [
     "wood_chair",
     "chair_billiani_doll",
     "chair_willisau_riale",
+    "vitra_meda_chair",
 ]
 CHAIRS = [record for record in chairs if record.name in CHAIR_NAMES]
 
@@ -33,3 +34,12 @@ LAMP_NAMES = [
     "duncan_floor_lamp_crate_and_barrel",
 ]
 LAMPS = [record for record in lamps if record.name in LAMP_NAMES]
+
+# trashbin
+# radiator_pub
+
+fruit_names = ["apple", "b03_banana_01_high", "b03_burger", "b04_banana", "b04_orange_00", "banana_fix2"]
+
+bread_names = ["b03_loafbread", "bread"]
+
+drink_names = ["102_pepsi_can_12_fl_oz_vray"]
