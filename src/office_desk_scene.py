@@ -17,7 +17,7 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser(description="add obj")
-parser.add_argument("--fruit", default="")
+parser.add_argument("--fruit", default="none")
 args = parser.parse_args()
 
 
@@ -52,12 +52,13 @@ class OculusTouchTestScene(Controller):
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
         self.communicate(
             [
-                TDWUtils.create_empty_room(12, 12),
+                # TDWUtils.create_empty_room(12, 12),
+                self.get_add_scene(scene_name="tdw_room"),
                 {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
         self.capture = ImageCapture(
-            path=self.path, avatar_ids=["vr"], pass_masks=["_img"]
+            path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
         )
         self.add_ons.append(self.capture)
         self.frame = 0
@@ -104,7 +105,7 @@ class OculusTouchTestScene(Controller):
         cup = random.choice(OculusTouchTestScene.CUPS)
         lamp = random.choice(OculusTouchTestScene.LAMPS)
         table_x = 0
-        table_z = 1
+        table_z = 0.5
         table_id = self.get_unique_id()
         # Add the model.
         resp = self.communicate(
@@ -252,7 +253,7 @@ class OculusTouchTestScene(Controller):
             #         path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
             #         plt.imshow(depth_values)
             #         plt.savefig(path)
-            # self.frame += 1
+            self.frame += 1
             self.communicate([])
         # Destroy the object.
         self.communicate(

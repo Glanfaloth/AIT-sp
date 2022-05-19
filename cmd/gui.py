@@ -22,6 +22,12 @@ fruit.set("none")
 fruitLabel = Label(root, text="Select a fruit", fg="blue")
 fruitLabel.pack()
 
+PASS_MASKS = [
+    ("img", "_img"),
+    ("id", "_id"),
+    ("depth", "_depth")
+]
+
 for text, name in FRUITS:
     Radiobutton(root, text=text, variable=fruit, value=name).pack(anchor=W)
 
