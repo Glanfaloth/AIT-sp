@@ -1,6 +1,9 @@
 import sys
 import os
 from tkinter import *
+
+from matplotlib.pyplot import grid
+from pyparsing import col
 root = Tk()
 
 root.title("Synthetic Data with ThreeDWorld")
@@ -14,6 +17,9 @@ FRUITS = [
 
 fruit = StringVar()
 fruit.set("apple")
+
+fruitLabel = Label(root, text="Select a fruit", fg="blue")
+fruitLabel.pack()
 
 for text, name in FRUITS:
     Radiobutton(root, text=text, variable=fruit, value=name).pack(anchor=W)
