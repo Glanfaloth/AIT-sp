@@ -54,7 +54,7 @@ class OculusTouchTestScene(Controller):
             [
                 # TDWUtils.create_empty_room(12, 12),
                 self.get_add_scene(scene_name="tdw_room"),
-                {"$type": "set_target_framerate", "framerate": 30},
+                # {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
         self.capture = ImageCapture(
@@ -242,17 +242,17 @@ class OculusTouchTestScene(Controller):
 
         self.communicate(commands)
 
-        # self.images = self.capture.images["vr"]
+        self.images = self.capture.images["vr"]
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
-            # for i in range(self.images.get_num_passes()):
-            #     if self.images.get_pass_mask(i) == "_depth":
-            #         # Get the depth values.
-            #         depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
-            #         path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
-            #         plt.imshow(depth_values)
-            #         plt.savefig(path)
+            for i in range(self.images.get_num_passes()):
+                if self.images.get_pass_mask(i) == "_depth":
+                    # Get the depth values.
+                    depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
+                    path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
+                    plt.imshow(depth_values)
+                    plt.savefig(path)
             self.frame += 1
             self.communicate([])
         # Destroy the object.
