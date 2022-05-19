@@ -17,8 +17,10 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser(description="add obj")
-parser.add_argument("--fruit", default="apple")
+parser.add_argument("--fruit", default="")
 args = parser.parse_args()
+
+
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
 
@@ -182,7 +184,10 @@ class OculusTouchTestScene(Controller):
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
-
+            ]
+        )
+        if args.fruit != "none":
+            self.communicate(
                 self.get_add_object(
                     model_name=args.fruit,
                     object_id=fruit_id,
@@ -193,8 +198,7 @@ class OculusTouchTestScene(Controller):
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
-            ]
-        )
+            )
         commands = []
         commands.extend(
             self.get_add_physics_object(
@@ -236,7 +240,7 @@ class OculusTouchTestScene(Controller):
             )
 
         self.communicate(commands)
-       
+
         # self.images = self.capture.images["vr"]
 
         # Wait until the trial is done.
