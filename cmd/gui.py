@@ -25,7 +25,7 @@ for text, name in FRUITS:
     Radiobutton(root, text=text, variable=fruit, value=name).pack(anchor=W)
 
 def click(value):
-    os.system("python3 src\scene.py --fruit " + value)
+    os.system("python3 src\office_desk_scene.py --fruit " + value)
 
 
 btn = Button(root, text="Run", command=lambda: click(fruit.get()))
