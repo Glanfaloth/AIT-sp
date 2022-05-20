@@ -15,6 +15,7 @@ from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 parser = argparse.ArgumentParser(description="add obj")
+parser.add_argument("--cup", default="cup")
 parser.add_argument("--fruit", default="none")
 parser.add_argument("--bread", default="none")
 args = parser.parse_args()
@@ -25,7 +26,6 @@ class OculusTouchTestScene(Controller):
 
     TABLES = constants.TABLES
     CHAIRS = constants.CHAIRS
-    CUPS = constants.CUPS
     LAMPS = constants.LAMPS
 
     def __init__(
@@ -102,7 +102,6 @@ class OculusTouchTestScene(Controller):
         # Choose a random model.
         table = random.choice(OculusTouchTestScene.TABLES)
         chair = random.choice(OculusTouchTestScene.CHAIRS)
-        cup = random.choice(OculusTouchTestScene.CUPS)
         lamp = random.choice(OculusTouchTestScene.LAMPS)
         table_x = 0
         table_z = 0.5
@@ -217,7 +216,7 @@ class OculusTouchTestScene(Controller):
         commands = []
         commands.extend(
             self.get_add_physics_object(
-                model_name=cup.name,
+                model_name=args.cup,
                 object_id=cup_id,
                 position={
                     "x": table_x - 0.3,

@@ -37,6 +37,6 @@ LAMPS = [record for record in lamps if record.name in LAMP_NAMES]
 
 # trashbin
 # radiator_pub
-
+# pencil_all
 
 drink_names = ["102_pepsi_can_12_fl_oz_vray"]
