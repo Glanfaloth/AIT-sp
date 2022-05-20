@@ -1,4 +1,4 @@
-import sys
+import random
 import os
 from tkinter import *
 
@@ -10,17 +10,26 @@ root = Tk()
 root.title("Synthetic Data with ThreeDWorld")
 
 # select a fruit
+FRUIT_NAMES = [
+    "apple",
+    "b03_banana_01_high",
+    "b04_banana",
+    "banana_fix2",
+    "b04_orange_00",
+]
+
 FRUITS = [
-    ("none", "none"),
+    ("random", "random"),
     ("apple", "apple"),
     ("banana1", "b03_banana_01_high"),
     ("banana2", "b04_banana"),
     ("banana3", "banana_fix2"),
     ("orange", "b04_orange_00"),
+    ("none", "none"),
 ]
 
 fruit = StringVar()
-fruit.set("none")
+fruit.set("random")
 
 fruitLabel = Label(root, text="Select a fruit", fg="blue")
 fruitLabel.pack()
@@ -50,7 +59,10 @@ PASS_MASKS = [("img", "_img"), ("id", "_id"), ("depth", "_depth")]
 def click(fruitValue, breadValue):
     fruitArg = ""
     breadArg = ""
-    if fruitValue != "":
+    if fruitValue == "random":
+        fruitValue = random.choice(FRUIT_NAMES)
+        fruitArg = " --fruit " + fruitValue
+    elif fruitValue != "":
         fruitArg = " --fruit " + fruitValue
     if breadValue != "":
         breadArg = " --bread " + breadValue
