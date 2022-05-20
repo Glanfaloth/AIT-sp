@@ -1,24 +1,22 @@
 import numpy as np
 import random
+import os
+import argparse
+import constants
+import matplotlib.pyplot as plt
 from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.oculus_touch import OculusTouch
 from tdw.vr_data.oculus_touch_button import OculusTouchButton
-
-import matplotlib.pyplot as plt
 from tdw.librarian import ModelLibrarian, ModelRecord
-from tdw.output_data import Bounds, OutputData, CameraMatrices
-from tdw.add_ons.third_person_camera import ThirdPersonCamera
+from tdw.output_data import Bounds
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
-import constants
-import os
-import argparse
-
 parser = argparse.ArgumentParser(description="add obj")
 parser.add_argument("--fruit", default="none")
+parser.add_argument("--bread", default="none")
 args = parser.parse_args()
 
 
@@ -50,8 +48,10 @@ class OculusTouchTestScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
-        self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture/output.npy")
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("office_scene")
+        self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
+            "office_scene/output.npy"
+        )
         self.communicate(
             [
                 self.get_add_scene(scene_name="tdw_room"),
@@ -163,6 +163,7 @@ class OculusTouchTestScene(Controller):
         computer_id = self.get_unique_id()
         lamp_id = self.get_unique_id()
         fruit_id = self.get_unique_id()
+        bread_id = self.get_unique_id()
         self.communicate(
             [
                 self.get_add_object(
@@ -193,11 +194,24 @@ class OculusTouchTestScene(Controller):
                     model_name=args.fruit,
                     object_id=fruit_id,
                     position={
-                        "x": table_left[0] + 0.3,
+                        "x": table_x - 0.3,
                         "y": table_top[1],
-                        "z": table_left[2] + 0.1,
+                        "z": table_z + 0.1,
                     },
-                    rotation={"x": 0, "y": 180, "z": 0},
+                    rotation={"x": 0, "y": 0, "z": 0},
+                ),
+            )
+        if args.bread != "none":
+            self.communicate(
+                self.get_add_object(
+                    model_name=args.bread,
+                    object_id=bread_id,
+                    position={
+                        "x": table_x - 0.2,
+                        "y": table_top[1],
+                        "z": table_z - 0.1,
+                    },
+                    rotation={"x": 0, "y": 90, "z": 0},
                 ),
             )
         commands = []
@@ -250,8 +264,17 @@ class OculusTouchTestScene(Controller):
             for i in range(self.images.get_num_passes()):
                 if self.images.get_pass_mask(i) == "_depth":
                     # Get the depth values.
-                    depth_values = TDWUtils.get_depth_values(self.images.get_image(i), depth_pass="_depth", width=self.images.get_width(), height=self.images.get_height())
-                    path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
+                    depth_values = TDWUtils.get_depth_values(
+                        self.images.get_image(i),
+                        depth_pass="_depth",
+                        width=self.images.get_width(),
+                        height=self.images.get_height(),
+                    )
+                    path = os.path.join(
+                        self.path,
+                        "vr",
+                        "depth_value_" + TDWUtils.zero_padding(self.frame, 4) + ".png",
+                    )
                     plt.imshow(depth_values)
                     plt.savefig(path)
                     self.depth_value_dump.append(depth_values)
@@ -283,7 +306,6 @@ class OculusTouchTestScene(Controller):
         self.simulation_done = True
         self.frame = 0
         np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
-
 
     def end_trial(self):
         self.trial_done = True
