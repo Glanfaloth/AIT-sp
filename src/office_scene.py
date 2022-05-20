@@ -54,7 +54,8 @@ class OculusTouchTestScene(Controller):
         )
         self.communicate(
             [
-                self.get_add_scene(scene_name="tdw_room"),
+                TDWUtils.create_empty_room(12, 12),
+                # self.get_add_scene(scene_name="tdw_room"),
             ]
         )
         self.capture = ImageCapture(
