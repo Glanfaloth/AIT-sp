@@ -38,14 +38,15 @@ for text, name in FRUITS:
     Radiobutton(root, text=text, variable=fruit, value=name).pack(anchor=W)
 
 # select a bread
+BREAD_NAMES = [ "bread", "b03_loafbread", "b03_burger"]
 BREADS = [
-    ("none", "none"),
+   ("random", "random"),
     ("bread", "bread"),
     ("loafbread", "b03_loafbread"),
-    ("burger", "b03_burger"),
+    ("burger", "b03_burger"), ("none", "none"),
 ]
 bread = StringVar()
-bread.set("none")
+bread.set("random")
 
 breadLabel = Label(root, text="Select a bread", fg="blue")
 breadLabel.pack()
@@ -64,7 +65,10 @@ def click(fruitValue, breadValue):
         fruitArg = " --fruit " + fruitValue
     elif fruitValue != "":
         fruitArg = " --fruit " + fruitValue
-    if breadValue != "":
+    if breadValue == "random":
+        breadValue = random.choice(FRUIT_NAMES)
+        breadArg = " --bread " + breadValue
+    elif  breadValue != "":
         breadArg = " --bread " + breadValue
     os.system("python3 src\office_scene.py" + fruitArg + breadArg)
 
