@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.oculus_touch import OculusTouch
@@ -50,11 +51,10 @@ class OculusTouchTestScene(Controller):
         )
         self.add_ons.extend([self.vr])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture")
+        self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("image_capture/output.npy")
         self.communicate(
             [
-                # TDWUtils.create_empty_room(12, 12),
                 self.get_add_scene(scene_name="tdw_room"),
-                # {"$type": "set_target_framerate", "framerate": 30},
             ]
         )
         self.capture = ImageCapture(
@@ -242,10 +242,11 @@ class OculusTouchTestScene(Controller):
 
         self.communicate(commands)
 
-        self.images = self.capture.images["vr"]
+        self.depth_value_dump: List[np.array] = list()
 
         # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
+            self.images = self.capture.images["vr"]
             for i in range(self.images.get_num_passes()):
                 if self.images.get_pass_mask(i) == "_depth":
                     # Get the depth values.
@@ -253,6 +254,7 @@ class OculusTouchTestScene(Controller):
                     path = os.path.join(self.path, "vr", "dm_" + TDWUtils.zero_padding(self.frame, 4) + ".png")
                     plt.imshow(depth_values)
                     plt.savefig(path)
+                    self.depth_value_dump.append(depth_values)
             self.frame += 1
             self.communicate([])
         # Destroy the object.
@@ -280,6 +282,8 @@ class OculusTouchTestScene(Controller):
     def quit(self):
         self.simulation_done = True
         self.frame = 0
+        np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
+
 
     def end_trial(self):
         self.trial_done = True
