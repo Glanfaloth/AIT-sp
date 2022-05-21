@@ -1,4 +1,3 @@
-from msilib.schema import RadioButton
 import random
 import os
 from tkinter import *
@@ -93,7 +92,7 @@ def click(cupValue, fruitValue, breadValue):
         breadArg = " --bread " + breadValue
     elif breadValue != "":
         breadArg = " --bread " + breadValue
-    os.system("python3 src\office_scene.py" + cupArg + fruitArg + breadArg)
+    os.system("python3 src\test.py" + cupArg + fruitArg + breadArg)
 
 
 btn = Button(root, text="Run", command=lambda: click(cup.get(), fruit.get(), bread.get()))

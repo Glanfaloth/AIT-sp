@@ -21,9 +21,6 @@ CHAIR_NAMES = [
 ]
 CHAIRS = [record for record in chairs if record.name in CHAIR_NAMES]
 
-cups = librarian.get_all_models_in_wnid("n03147509")  # cup
-CUPS = [record for record in cups if not record.do_not_use]
-
 lamps = librarian.get_all_models_in_wnid("n03367059") # floor lamp
 LAMP_NAMES = [
     "alma_floor_lamp",
