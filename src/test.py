@@ -24,7 +24,6 @@ BOTTLES = [
     "soap_dispenser_01",
 ]
 
-
 class ProcGen(Controller):
     """ """
 

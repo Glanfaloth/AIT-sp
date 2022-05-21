@@ -26,6 +26,8 @@ BOTTLES = [
     "kosmos_black_soap_dispenser",
     "soap_dispenser_01",
 ]
+
+
 class OculusTouchBathroomScene(Controller):
     def __init__(
         self, port: int = 1071, check_version: bool = True, launch_build: bool = True
@@ -66,19 +68,42 @@ class OculusTouchBathroomScene(Controller):
         self.vr.reset()
         self.trial_done = False
         sink_x = 0
-        sink_z = 0
+        sink_z = 0.5
         sink_id = self.get_unique_id()
 
         resp = self.communicate(
             [
                 # TDWUtils.create_empty_room(12, 12),
                 self.get_add_scene(scene_name="monkey_physics_room"),
-                self.get_add_object(
-                    model_name=args.sink,
-                    position={"x": sink_x, "y": 0, "z": sink_z},
-                    rotation={"x": 0, "y": 0, "z": 0},
-                    object_id=sink_id,
-                ),
+                {
+                    "$type": "add_object",
+                    "name": args.sink,
+                    "url": "https://tdw-public.s3.amazonaws.com/models/windows/2020.3/"
+                    + args.sink,
+                    "scale_factor": 1.0,
+                    "position": {"x": sink_x, "y": 0, "z": sink_z},
+                    "category": "cabinet",
+                    "id": sink_id,
+                },
+                {
+                    "$type": "rotate_object_to_euler_angles",
+                    "euler_angles": {"x": 0, "y": 180, "z": 0},
+                    "id": sink_id,
+                },
+                {
+                    "$type": "set_kinematic_state",
+                    "id": sink_id,
+                    "is_kinematic": True,  # kinematic object is non-graspable
+                    "use_gravity": True,
+                },
+                {"$type": "set_mass", "mass": 50, "id": sink_id},
+                {
+                    "$type": "set_physic_material",
+                    "dynamic_friction": 0.45,
+                    "static_friction": 0.48,
+                    "bounciness": 0.5,
+                    "id": sink_id,
+                },
                 {"$type": "send_bounds", "frequency": "once", "ids": [sink_id]},
             ]
         )
@@ -101,9 +126,9 @@ class OculusTouchBathroomScene(Controller):
                 self.get_add_object(
                     model_name=BOTTLES[i],
                     position={
-                        "x": sink_left[0] + 0.1 * i + 0.1,
+                        "x": sink_left[0] - 0.1 * i - 0.1,
                         "y": sink_top[1],
-                        "z": sink_back[2] + 0.1,
+                        "z": sink_back[2] - 0.1,
                     },
                     rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                     object_id=bottle_id,
@@ -112,7 +137,7 @@ class OculusTouchBathroomScene(Controller):
         self.communicate(
             self.get_add_object(
                 model_name=args.toothbrush,
-                position={"x": sink_left[0] + 0.3, "y": sink_top[1], "z": sink_left[2]},
+                position={"x": sink_left[0] - 0.3, "y": sink_top[1], "z": sink_left[2]},
                 rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                 object_id=toothbrush_id,
             ),
@@ -121,7 +146,7 @@ class OculusTouchBathroomScene(Controller):
             self.get_add_object(
                 model_name="b05_48_body_shop_hair_brush",
                 position={
-                    "x": sink_right[0] - 0.3,
+                    "x": sink_right[0] + 0.3,
                     "y": sink_top[1],
                     "z": sink_right[2],
                 },
@@ -133,15 +158,14 @@ class OculusTouchBathroomScene(Controller):
             self.get_add_object(
                 model_name="b04_comb",
                 position={
-                    "x": sink_right[0] - 0.2,
+                    "x": sink_right[0] + 0.2,
                     "y": sink_top[1],
-                    "z": sink_right[2] + 0.1,
+                    "z": sink_right[2] - 0.1,
                 },
                 rotation={"x": 90, "y": float(random.uniform(-360, 360)), "z": 0},
                 object_id=comb2_id,
             ),
         )
-        self.communicate(commands)
 
         self.depth_value_dump: List[np.array] = list()
 
@@ -173,7 +197,7 @@ class OculusTouchBathroomScene(Controller):
                 {"$type": "destroy_object", "id": comb2_id},
             ]
         )
-        for i in range(len(bottle_ids) -1):
+        for i in range(len(bottle_ids) - 1):
             self.communicate({"$type": "destroy_object", "id": bottle_ids[i]})
 
     def run(self) -> None:
@@ -189,6 +213,7 @@ class OculusTouchBathroomScene(Controller):
     def end_trial(self):
         self.trial_done = True
         self.frame = 0
+
 
 if __name__ == "__main__":
     c = OculusTouchBathroomScene()
