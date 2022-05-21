@@ -48,9 +48,9 @@ class OculusTouchTestScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("office_scene")
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_office")
         self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
-            "office_scene/output.npy"
+            "scene_office/output.npy"
         )
         self.communicate(
             [

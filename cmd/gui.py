@@ -210,7 +210,7 @@ class PageOffice(Frame):
                 breadArg = " --bread " + breadValue
             elif breadValue != "":
                 breadArg = " --bread " + breadValue
-            os.system("python3 src\test.py" + cupArg + fruitArg + breadArg)
+            os.system("python3 src\scene_office.py" + cupArg + fruitArg + breadArg)
 
 
         btn = Button(self, text="Run", command=lambda: click(cup.get(), fruit.get(), bread.get()))
