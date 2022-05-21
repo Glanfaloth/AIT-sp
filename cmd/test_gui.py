@@ -11,10 +11,10 @@ root.title("Synthetic Data with ThreeDWorld")
 # select a bathroom sink
 SINK_NAMES = [
     "sink_cabinet_unit_wood_beech_honey_porcelain_composite",
-    "b03_banana_01_high",
+    "sink_cabinet_unit_wood_oak_white_porcelain_composite",
 ]
 
-SINK_NAMES = [
+SINKS = [
     ("random", "random"),
     ("beech", "sink_cabinet_unit_wood_beech_honey_porcelain_composite"),
     ("oak", "sink_cabinet_unit_wood_oak_white_porcelain_composite"),
@@ -26,7 +26,7 @@ sink.set("random")
 sinkLabel = Label(root, text="Select a sink", fg="blue")
 sinkLabel.pack()
 
-for text, name in SINK_NAMES:
+for text, name in SINKS:
     Radiobutton(root, text=text, variable=sink, value=name).pack(anchor=W)
 
 # select a toothbrush
@@ -62,7 +62,7 @@ def click(sinkValue, toothbrushValue):
         toothbrushArg = " --toothbrush " + toothbrushValue
     elif toothbrushValue != "":
         toothbrushArg = " --toothbrush " + toothbrushValue
-    os.system("python3 src\office_scene.py"  + sinkArg + toothbrushArg)
+    os.system("python3 src\scene_bathroom.py"  + sinkArg + toothbrushArg)
 
 
 btn = Button(root, text="Run", command=lambda: click(sink.get(), toothbrush.get()))
