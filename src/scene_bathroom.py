@@ -49,9 +49,9 @@ class OculusTouchBathroomScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_bathroom")
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_kitchen")
         self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
-            "scene_bathroom/output.npy"
+            "scene_kitchen/output.npy"
         )
         self.communicate(
             [
