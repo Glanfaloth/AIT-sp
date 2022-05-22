@@ -43,8 +43,11 @@ class StartPage(Frame):
                             command=lambda: controller.show_frame("PageBathroom"))
         button2 = Button(self, text="Go to the Office",
                             command=lambda: controller.show_frame("PageOffice"))
+        button3 = Button(self, text="Go to the Kitchen",
+                            command=lambda: controller.show_frame("PageKitchen"))
         button1.pack()
         button2.pack()
+        button3.pack()
 
 class PageBathroom(Frame):
 
@@ -214,6 +217,80 @@ class PageOffice(Frame):
 
 
         btn = Button(self, text="Run", command=lambda: click(cup.get(), fruit.get(), bread.get()))
+        btn.pack()
+
+class PageKitchen(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+        label = Label(self, text="This is a kitchen", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+        # select a kitchen sink
+        SINK_NAMES = [
+            "sink_cabinet_unit_wood_beech_honey_chrome_composite",
+            "sink_cabinet_unit_wood_oak_white_chrome_composite",
+        ]
+
+        SINKS = [
+            ("random", "random"),
+            ("beech", "sink_cabinet_unit_wood_beech_honey_chrome_composite"),
+            ("oak", "sink_cabinet_unit_wood_oak_white_chrome_composite"),
+        ]
+
+        sink = StringVar()
+        sink.set("random")
+
+        sinkLabel = Label(self, text="Select a sink", fg="blue")
+        sinkLabel.pack()
+
+        for text, name in SINKS:
+            Radiobutton(self, text=text, variable=sink, value=name).pack(anchor=W)
+
+        # select a microwave
+        MICROWAVE_NAMES = ["appliance-ge-profile-microwave_composite", "appliance-ge-profile-microwave3_composite", "b05_whirlpool_microwave_wmc30516as_v-ray", "cgaxis_models_10_11_vray", "microwave_composite", "vm_v5_070_composite", "vray_062_composite"]
+        MICROWAVES = [
+            ("random", "random"),
+            ("microwave1", "appliance-ge-profile-microwave_composite"),
+            ("microwave2", "appliance-ge-profile-microwave3_composite"),
+            ("microwave3", "b05_whirlpool_microwave_wmc30516as_v-ray"),
+            ("microwave3", "cgaxis_models_10_11_vray"),
+            ("microwave3", "microwave_composite"),
+            ("microwave3", "vm_v5_070_composite"),
+            ("microwave3", "vray_062_composite"),
+        ]
+        toothbrush = StringVar()
+        toothbrush.set("random")
+
+        toothbrushLabel = Label(self, text="Select a toothbrush", fg="blue")
+        toothbrushLabel.pack()
+
+        for text, name in MICROWAVES:
+            Radiobutton(self, text=text, variable=toothbrush, value=name).pack(anchor=W)
+
+        PASS_MASKS = [("img", "_img"), ("id", "_id"), ("depth", "_depth")]
+
+        # add a button to run the program
+        def click(sinkValue, toothbrushValue):
+            sinkArg = ""
+            if sinkValue == "random":
+                sinkValue = random.choice(SINK_NAMES)
+                sinkArg = " --sink " + sinkValue
+            elif sinkValue != "":
+                sinkArg = " --sink " + sinkValue
+            toothbrushArg = ""
+            if toothbrushValue == "random":
+                toothbrushValue = random.choice(MICROWAVE_NAMES)
+                toothbrushArg = " --toothbrush " + toothbrushValue
+            elif toothbrushValue != "":
+                toothbrushArg = " --toothbrush " + toothbrushValue
+            os.system("python3 src\scene_bathroom.py"  + sinkArg + toothbrushArg)
+
+
+        btn = Button(self, text="Run", command=lambda: click(sink.get(), toothbrush.get()))
         btn.pack()
 
 if __name__ == "__main__":
