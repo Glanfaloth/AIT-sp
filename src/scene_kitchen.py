@@ -15,19 +15,20 @@ from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 parser = argparse.ArgumentParser(description="add obj")
-parser.add_argument("--cup", default="cup")
-parser.add_argument("--fruit", default="none")
-parser.add_argument("--bread", default="none")
+parser.add_argument(
+    "--sink", default="sink_cabinet_unit_wood_beech_honey_porcelain_composite"
+)
+parser.add_argument("--microwave", default="microwave")
 args = parser.parse_args()
+BOTTLES = [
+    "b05_bathroom_dispenser",
+    "blue_edition_liquid_soap02",
+    "kosmos_black_soap_dispenser",
+    "soap_dispenser_01",
+]
 
 
-class OculusTouchTestScene(Controller):
-    librarian = ModelLibrarian()
-
-    TABLES = constants.TABLES
-    CHAIRS = constants.CHAIRS
-    LAMPS = constants.LAMPS
-
+class OculusTouchBathroomScene(Controller):
     def __init__(
         self, port: int = 1071, check_version: bool = True, launch_build: bool = True
     ):
@@ -48,14 +49,13 @@ class OculusTouchTestScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("kitchen_scene")
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_bathroom")
         self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
-            "kitchen_scene/output.npy"
+            "scene_bathroom/output.npy"
         )
         self.communicate(
             [
-                TDWUtils.create_empty_room(12, 12),
-                # self.get_add_scene(scene_name="tdw_room"),
+                self.get_add_scene(scene_name="monkey_physics_room"),
             ]
         )
         self.capture = ImageCapture(
@@ -64,206 +64,115 @@ class OculusTouchTestScene(Controller):
         self.add_ons.append(self.capture)
         self.frame = 0
 
-    @staticmethod
-    def get_longest_extent(record: ModelRecord) -> float:
-        left = TDWUtils.vector3_to_array(record.bounds["left"])
-        right = TDWUtils.vector3_to_array(record.bounds["right"])
-        front = TDWUtils.vector3_to_array(record.bounds["front"])
-        back = TDWUtils.vector3_to_array(record.bounds["back"])
-        left_right: float = np.linalg.norm(left - right)
-        front_back: float = np.linalg.norm(front - back)
-        if left_right > front_back:
-            return left_right
-        else:
-            return front_back
-
-    def get_table_placement_coordinate(self, radius: float) -> float:
-        q = float(random.uniform(0, 6 - radius))
-        if random.random() < 0.5:
-            q *= -1
-        return q
-
-    def get_chair_position(
-        self, table_center: np.array, table_bound_point: np.array
-    ) -> np.array:
-        position_to_center = table_bound_point - table_center
-        position_to_center_normalized = position_to_center / np.linalg.norm(
-            position_to_center
-        )
-        chair_position = table_bound_point + (
-            position_to_center_normalized * random.uniform(1, 0.25)
-        )
-        chair_position[1] = 0
-        return chair_position
-
     def trial(self) -> None:
         self.vr.reset()
-        # Start a new trial.
         self.trial_done = False
-        # Choose a random model.
-        table = random.choice(OculusTouchTestScene.TABLES)
-        chair = random.choice(OculusTouchTestScene.CHAIRS)
-        lamp = random.choice(OculusTouchTestScene.LAMPS)
-        table_x = 0
-        table_z = 0.5
-        table_id = self.get_unique_id()
-        # Add the model.
+        sink_x = 0
+        sink_z = 0.5
+        sink_id = self.get_unique_id()
+
         resp = self.communicate(
             [
+                # TDWUtils.create_empty_room(12, 12),
+                self.get_add_scene(scene_name="monkey_physics_room"),
                 {
                     "$type": "add_object",
-                    "name": table.name,
-                    "url": "https://tdw-public.s3.amazonaws.com/models/windows/2018-2019.1/"
-                    + table.name,
+                    "name": args.sink,
+                    "url": "https://tdw-public.s3.amazonaws.com/models/windows/2020.3/"
+                    + args.sink,
                     "scale_factor": 1.0,
-                    "position": {"x": table_x, "y": 0, "z": table_z},
-                    "category": "table",
-                    "id": table_id,
+                    "position": {"x": sink_x, "y": 0, "z": sink_z},
+                    "category": "cabinet",
+                    "id": sink_id,
                 },
                 {
                     "$type": "rotate_object_to_euler_angles",
-                    "euler_angles": {"x": 0, "y": 0, "z": 0},
-                    "id": table_id,
+                    "euler_angles": {"x": 0, "y": 180, "z": 0},
+                    "id": sink_id,
                 },
                 {
                     "$type": "set_kinematic_state",
-                    "id": table_id,
+                    "id": sink_id,
                     "is_kinematic": True,  # kinematic object is non-graspable
                     "use_gravity": True,
                 },
-                {"$type": "set_mass", "mass": 50, "id": table_id},
+                {"$type": "set_mass", "mass": 50, "id": sink_id},
                 {
                     "$type": "set_physic_material",
                     "dynamic_friction": 0.45,
                     "static_friction": 0.48,
                     "bounciness": 0.5,
-                    "id": table_id,
+                    "id": sink_id,
                 },
-                {"$type": "send_bounds", "frequency": "once", "ids": [table_id]},
+                {"$type": "send_bounds", "frequency": "once", "ids": [sink_id]},
             ]
         )
-
         bounds = Bounds(resp[0])
-        table_center = np.array(bounds.get_center(0))
-        table_left = np.array(bounds.get_left(0))
-        table_right = np.array(bounds.get_right(0))
-        table_top = bounds.get_top(0)
-        table_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
-        chair_positions = [
-            self.get_chair_position(
-                table_center=table_center,
-                table_bound_point=table_left,
-            ),
-            self.get_chair_position(
-                table_center=table_center,
-                table_bound_point=table_right,
-            ),
-        ]
-        cup_id = self.get_unique_id()
-        computer_id = self.get_unique_id()
-        lamp_id = self.get_unique_id()
-        fruit_id = self.get_unique_id()
-        bread_id = self.get_unique_id()
-        self.communicate(
-            [
-                self.get_add_object(
-                    model_name="macbook_air",
-                    object_id=computer_id,
-                    position={
-                        "x": table_x + 0.2,
-                        "y": table_top[1],
-                        "z": table_z,
-                    },
-                    rotation={"x": 0, "y": 180, "z": 0},
-                ),
-                self.get_add_object(
-                    model_name=lamp.name,
-                    object_id=lamp_id,
-                    position={
-                        "x": table_left[0] - 0.3,
-                        "y": 0,
-                        "z": table_left[2] + 1,
-                    },
-                    rotation={"x": 0, "y": 180, "z": 0},
-                ),
-            ]
-        )
-        if args.fruit != "none":
-            self.communicate(
-                self.get_add_object(
-                    model_name=args.fruit,
-                    object_id=fruit_id,
-                    position={
-                        "x": table_x - 0.3,
-                        "y": table_top[1],
-                        "z": table_z + 0.1,
-                    },
-                    rotation={"x": 0, "y": 0, "z": 0},
-                ),
-            )
-        if args.bread != "none":
-            self.communicate(
-                self.get_add_object(
-                    model_name=args.bread,
-                    object_id=bread_id,
-                    position={
-                        "x": table_x - 0.2,
-                        "y": table_top[1],
-                        "z": table_z - 0.1,
-                    },
-                    rotation={"x": 0, "y": 90, "z": 0},
-                ),
-            )
-        commands = []
-        commands.extend(
-            self.get_add_physics_object(
-                model_name=args.cup,
-                object_id=cup_id,
-                position={
-                    "x": table_x - 0.3,
-                    "y": table_top[1],
-                    "z": table_z - 0.3,
-                },
-                rotation={"x": 0, "y": 0, "z": 0},
-            ),
-        )
-        chair_ids = []
-        for chair_position in chair_positions:
-            object_id = self.get_unique_id()
-            chair_ids.append(object_id)
-            commands.extend(
-                self.get_add_physics_object(
-                    model_name=chair.name,
-                    position=TDWUtils.array_to_vector3(chair_position),
-                    object_id=object_id,
-                ),
-            )
-            commands.extend(
-                [
-                    {
-                        "$type": "object_look_at_position",
-                        "position": table_bottom,
-                        "id": object_id,
-                    },
-                    {
-                        "$type": "rotate_object_by",
-                        "angle": float(random.uniform(-20, 20)),
-                        "id": object_id,
-                        "axis": "yaw",
-                    },
-                ]
-            )
+        sink_center = np.array(bounds.get_center(0))
+        sink_top = bounds.get_top(0)
+        sink_bottom = TDWUtils.array_to_vector3(bounds.get_bottom(0))
+        sink_back = bounds.get_back(0)
+        sink_left = bounds.get_left(0)
+        sink_right = bounds.get_right(0)
 
-        self.communicate(commands)
+        bottle_ids = []
+        microwave_id = self.get_unique_id()
+        comb1_id = self.get_unique_id()
+        comb2_id = self.get_unique_id()
+        for i in range(len(BOTTLES) - 1):
+            bottle_id = self.get_unique_id()
+            bottle_ids.append(bottle_id)
+            self.communicate(
+                self.get_add_object(
+                    model_name=BOTTLES[i],
+                    position={
+                        "x": sink_left[0] - 0.1 * i - 0.1,
+                        "y": sink_top[1],
+                        "z": sink_back[2] - 0.1,
+                    },
+                    rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
+                    object_id=bottle_id,
+                ),
+            )
+        self.communicate(
+            self.get_add_object(
+                model_name=args.microwave,
+                position={"x": sink_left[0] - 0.3, "y": sink_top[1], "z": sink_left[2]},
+                rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
+                object_id=microwave_id,
+            ),
+        )
+        self.communicate(
+            self.get_add_object(
+                model_name="b05_48_body_shop_hair_brush",
+                position={
+                    "x": sink_right[0] + 0.3,
+                    "y": sink_top[1],
+                    "z": sink_right[2],
+                },
+                rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
+                object_id=comb1_id,
+            ),
+        )
+        self.communicate(
+            self.get_add_object(
+                model_name="b04_comb",
+                position={
+                    "x": sink_right[0] + 0.2,
+                    "y": sink_top[1],
+                    "z": sink_right[2] - 0.1,
+                },
+                rotation={"x": 90, "y": float(random.uniform(-360, 360)), "z": 0},
+                object_id=comb2_id,
+            ),
+        )
 
         self.depth_value_dump: List[np.array] = list()
 
-        # Wait until the trial is done.
         while not self.trial_done and not self.simulation_done:
             self.images = self.capture.images["vr"]
             for i in range(self.images.get_num_passes()):
                 if self.images.get_pass_mask(i) == "_depth":
-                    # Get the depth values.
                     depth_values = TDWUtils.get_depth_values(
                         self.images.get_image(i),
                         depth_pass="_depth",
@@ -280,26 +189,20 @@ class OculusTouchTestScene(Controller):
                     self.depth_value_dump.append(depth_values)
             self.frame += 1
             self.communicate([])
-        # Destroy the object.
         self.communicate(
             [
-                {"$type": "destroy_object", "id": table_id},
-                {"$type": "destroy_object", "id": cup_id},
-                {"$type": "destroy_object", "id": computer_id},
-                {"$type": "destroy_object", "id": lamp_id},
-                {"$type": "destroy_object", "id": fruit_id},
+                {"$type": "destroy_object", "id": sink_id},
+                {"$type": "destroy_object", "id": microwave_id},
+                {"$type": "destroy_object", "id": comb1_id},
+                {"$type": "destroy_object", "id": comb2_id},
             ]
         )
-        for chair_id in chair_ids:
-            self.communicate(
-                {"$type": "destroy_object", "id": chair_id},
-            )
+        for i in range(len(bottle_ids) - 1):
+            self.communicate({"$type": "destroy_object", "id": bottle_ids[i]})
 
     def run(self) -> None:
         while not self.simulation_done:
-            # Run a trial.
             self.trial()
-        # End the simulation.
         self.communicate({"$type": "terminate"})
 
     def quit(self):
@@ -313,5 +216,5 @@ class OculusTouchTestScene(Controller):
 
 
 if __name__ == "__main__":
-    c = OculusTouchTestScene()
+    c = OculusTouchBathroomScene()
     c.run()
