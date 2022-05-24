@@ -19,8 +19,10 @@ class TDWApp(Tk):
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
+        self.iconbitmap("img\logo-ait.ico")
+        self.title("Synthetic Data with ThreeDWorld")
         self.frames = {}
+        self.geometry("1024x768")
         for F in (StartPage, PageBathroom, PageOffice):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
