@@ -2,14 +2,12 @@ import numpy as np
 import random
 import os
 import argparse
-import constants
 import matplotlib.pyplot as plt
 from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.oculus_touch import OculusTouch
 from tdw.vr_data.oculus_touch_button import OculusTouchButton
-from tdw.librarian import ModelLibrarian, ModelRecord
 from tdw.output_data import Bounds
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
@@ -49,9 +47,9 @@ class OculusTouchBathroomScene(Controller):
             function=self.end_trial,
         )
         self.add_ons.extend([self.vr])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_kitchen")
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_bathroom")
         self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
-            "scene_kitchen/output.npy"
+            "scene_bathroom/output.npy"
         )
         self.communicate(
             [
