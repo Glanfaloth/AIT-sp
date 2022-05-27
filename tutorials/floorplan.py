@@ -14,10 +14,10 @@ c = Controller()
 # Initialize the floorplan add-on.
 floorplan = Floorplan()
 # Scene 1, visual variant a, object layout 0.
-floorplan.init_scene(scene="1a", layout=0)
+floorplan.init_scene(scene="2a", layout=0)
 
 # Add a camera and enable image capture.
-camera = ThirdPersonCamera(position={"x": 0, "y": 2, "z": 0},
+camera = ThirdPersonCamera(position={"x": 0, "y": 40, "z": 0},
                            look_at={"x": 0, "y": 0, "z": 0},
                            avatar_id="a")
 path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("floorplan_controller")

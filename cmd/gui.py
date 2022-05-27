@@ -19,11 +19,10 @@ class TDWApp(Tk):
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+        
         self.iconbitmap("img/logo-ait.ico")
         self.title("Synthetic Data with ThreeDWorld")
-        self.my_img = ImageTk.PhotoImage(Image.open("img/logo-ait.png"))
-        self.my_label = Label(image=self.my_img)
-        self.my_label.pack()
+        
         self.frames = {}
         self.geometry("1024x768")
         for F in (StartPage, PageBathroom, PageOffice):
@@ -49,25 +48,28 @@ class StartPage(Frame):
             self, text="Synthetic Data with ThreeDWorld", font=controller.title_font
         )
         label.pack(side="top", fill="x", pady=10)
-
-        button1 = Button(
+        self.canvas = Canvas(self, width= 1280, height= 720)
+        self.canvas.pack()
+        self.my_img = ImageTk.PhotoImage(Image.open("img/floorplan.jpg"))
+        self.canvas.create_image(500, 300, image=self.my_img)
+        self.button1 = Button(
             self,
             text="Go to the Bathroom",
             command=lambda: controller.show_frame("PageBathroom"),
         )
-        button2 = Button(
+        self.button2 = Button(
             self,
             text="Go to the Office",
             command=lambda: controller.show_frame("PageOffice"),
         )
-        button3 = Button(
+        self.button3 = Button(
             self,
             text="Go to the Kitchen",
             command=lambda: os.system("python3 src\scene_kitchen.py"),
         )
-        button1.pack()
-        button2.pack()
-        button3.pack()
+        self.canvas.create_window(270, 200, anchor="nw", window=self.button1)
+        self.canvas.create_window(460, 400, anchor="nw", window=self.button2)
+        self.canvas.create_window(660, 400, anchor="nw", window=self.button3)
 
 
 class PageBathroom(Frame):
