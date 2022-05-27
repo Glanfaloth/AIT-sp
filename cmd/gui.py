@@ -3,9 +3,9 @@ import os
 from tkinter import *
 from tkinter import font as tkfont
 from tdw.librarian import ModelLibrarian
+from PIL import Image, ImageTk
 
 librarian = ModelLibrarian()
-
 
 class TDWApp(Tk):
     def __init__(self, *args, **kwargs):
@@ -19,8 +19,11 @@ class TDWApp(Tk):
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        self.iconbitmap("img\logo-ait.ico")
+        self.iconbitmap("img/logo-ait.ico")
         self.title("Synthetic Data with ThreeDWorld")
+        self.my_img = ImageTk.PhotoImage(Image.open("img/logo-ait.png"))
+        self.my_label = Label(image=self.my_img)
+        self.my_label.pack()
         self.frames = {}
         self.geometry("1024x768")
         for F in (StartPage, PageBathroom, PageOffice):
