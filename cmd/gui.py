@@ -99,11 +99,11 @@ class PageBathroom(Frame):
         sink = StringVar()
         sink.set("random")
 
-        sinkLabel = Label(self, text="Select a sink", fg="blue")
+        sinkLabel = LabelFrame(self, text="Select a sink", fg="blue", padx=20, pady=20)
         sinkLabel.pack()
 
         for text, name in SINKS:
-            Radiobutton(self, text=text, variable=sink, value=name).pack(anchor=W)
+            Radiobutton(sinkLabel, text=text, variable=sink, value=name).pack(anchor=W)
 
         # select a toothbrush
         TOOTHBRUSH_NAMES = ["toothbrush", "b03_toothbrush", "generic_toothbrush_001"]
@@ -116,11 +116,11 @@ class PageBathroom(Frame):
         toothbrush = StringVar()
         toothbrush.set("random")
 
-        toothbrushLabel = Label(self, text="Select a toothbrush", fg="blue")
+        toothbrushLabel = LabelFrame(self, text="Select a toothbrush", fg="blue", padx=20, pady=20)
         toothbrushLabel.pack()
 
         for text, name in TOOTHBRUSHS:
-            Radiobutton(self, text=text, variable=toothbrush, value=name).pack(anchor=W)
+            Radiobutton(toothbrushLabel, text=text, variable=toothbrush, value=name).pack(anchor=W)
 
         # add a button to run the program
         def click(sinkValue, toothbrushValue):
@@ -164,11 +164,11 @@ class PageOffice(Frame):
         cup = StringVar()
         cup.set("random")
 
-        cupLabel = Label(self, text="Select a cup", fg="blue")
+        cupLabel = LabelFrame(self, text="Select a cup", fg="blue", padx=20, pady=20)
         cupLabel.pack()
 
         for name in CUP_NAMES:
-            Radiobutton(self, text=name, variable=cup, value=name).pack(anchor=W)
+            Radiobutton(cupLabel, text=name, variable=cup, value=name).pack(anchor=W)
 
         # select a fruit
         FRUIT_NAMES = [
@@ -194,11 +194,11 @@ class PageOffice(Frame):
         fruit = StringVar()
         fruit.set("random")
 
-        fruitLabel = Label(self, text="Select a fruit", fg="blue")
+        fruitLabel = LabelFrame(self, text="Select a fruit", fg="blue", padx=20, pady=20)
         fruitLabel.pack()
 
         for text, name in FRUITS:
-            Radiobutton(self, text=text, variable=fruit, value=name).pack(anchor=W)
+            Radiobutton(fruitLabel, text=text, variable=fruit, value=name).pack(anchor=W)
 
         # select a bread
         BREAD_NAMES = ["bread", "b03_loafbread", "b03_burger"]
@@ -212,11 +212,11 @@ class PageOffice(Frame):
         bread = StringVar()
         bread.set("random")
 
-        breadLabel = Label(self, text="Select a bread", fg="blue")
+        breadLabel = LabelFrame(self, text="Select a bread", fg="blue", padx=20, pady=20)
         breadLabel.pack()
 
         for text, name in BREADS:
-            Radiobutton(self, text=text, variable=bread, value=name).pack(anchor=W)
+            Radiobutton(breadLabel, text=text, variable=bread, value=name).pack(anchor=W)
 
         # add a button to run the program
         def click(cupValue, fruitValue, breadValue):
