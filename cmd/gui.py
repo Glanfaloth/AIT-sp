@@ -102,8 +102,17 @@ class PageBathroom(Frame):
         sinkLabel = LabelFrame(self, text="Select a sink", fg="blue", padx=20, pady=20)
         sinkLabel.pack()
 
-        for text, name in SINKS:
-            Radiobutton(sinkLabel, text=text, variable=sink, value=name).pack(anchor=W)
+        for i in range(len(SINKS)):
+            text=SINKS[i][0]
+            value=SINKS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(sinkLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(sinkLabel, text=text, variable=sink, value=value).grid(row=1, column=i)
 
         # select a toothbrush
         TOOTHBRUSH_NAMES = ["toothbrush", "b03_toothbrush", "generic_toothbrush_001"]
@@ -119,8 +128,17 @@ class PageBathroom(Frame):
         toothbrushLabel = LabelFrame(self, text="Select a toothbrush", fg="blue", padx=20, pady=20)
         toothbrushLabel.pack()
 
-        for text, name in TOOTHBRUSHS:
-            Radiobutton(toothbrushLabel, text=text, variable=toothbrush, value=name).pack(anchor=W)
+        for i in range(len(TOOTHBRUSHS)):
+            text=TOOTHBRUSHS[i][0]
+            value=TOOTHBRUSHS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(toothbrushLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(toothbrushLabel, text=text, variable=toothbrush, value=value).grid(row=1, column=i)
 
         # add a button to run the program
         def click(sinkValue, toothbrushValue):
@@ -160,15 +178,23 @@ class PageOffice(Frame):
         cups = librarian.get_all_models_in_wnid("n03147509")  # cup
         CUP_NAMES = [record.name for record in cups if not record.do_not_use]
         CUP_NAMES.insert(0, "random")
-
+        print(CUP_NAMES)
         cup = StringVar()
         cup.set("random")
 
         cupLabel = LabelFrame(self, text="Select a cup", fg="blue", padx=20, pady=20)
         cupLabel.pack()
 
-        for name in CUP_NAMES:
-            Radiobutton(cupLabel, text=name, variable=cup, value=name).pack(anchor=W)
+        for i in range(len(CUP_NAMES)):
+            value=CUP_NAMES[i]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(cupLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(cupLabel, text=value, variable=cup, value=value).grid(row=1, column=i)
 
         # select a fruit
         FRUIT_NAMES = [
@@ -197,8 +223,19 @@ class PageOffice(Frame):
         fruitLabel = LabelFrame(self, text="Select a fruit", fg="blue", padx=20, pady=20)
         fruitLabel.pack()
 
-        for text, name in FRUITS:
-            Radiobutton(fruitLabel, text=text, variable=fruit, value=name).pack(anchor=W)
+        for i in range(len(FRUITS)):
+            text=FRUITS[i][0]
+            value=FRUITS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            elif value == 'none':
+                photo = ImageTk.PhotoImage(Image.open("img/none.jpg").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(fruitLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(fruitLabel, text=text, variable=fruit, value=value).grid(row=1, column=i)
 
         # select a bread
         BREAD_NAMES = ["bread", "b03_loafbread", "b03_burger"]
@@ -215,8 +252,19 @@ class PageOffice(Frame):
         breadLabel = LabelFrame(self, text="Select a bread", fg="blue", padx=20, pady=20)
         breadLabel.pack()
 
-        for text, name in BREADS:
-            Radiobutton(breadLabel, text=text, variable=bread, value=name).pack(anchor=W)
+        for i in range(len(BREADS)):
+            text=BREADS[i][0]
+            value=BREADS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            elif value == 'none':
+                photo = ImageTk.PhotoImage(Image.open("img/none.jpg").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(breadLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(breadLabel, text=text, variable=bread, value=value).grid(row=1, column=i)
 
         # add a button to run the program
         def click(cupValue, fruitValue, breadValue):
