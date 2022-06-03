@@ -100,7 +100,7 @@ class PageBathroom(Frame):
         sink.set("random")
 
         sinkLabel = LabelFrame(self, text="Select a sink", fg="blue", padx=20, pady=20)
-        sinkLabel.pack()
+        sinkLabel.pack(anchor=W, padx=20)
 
         for i in range(len(SINKS)):
             text=SINKS[i][0]
@@ -126,7 +126,7 @@ class PageBathroom(Frame):
         toothbrush.set("random")
 
         toothbrushLabel = LabelFrame(self, text="Select a toothbrush", fg="blue", padx=20, pady=20)
-        toothbrushLabel.pack()
+        toothbrushLabel.pack(anchor=W, padx=20)
 
         for i in range(len(TOOTHBRUSHS)):
             text=TOOTHBRUSHS[i][0]
@@ -157,9 +157,9 @@ class PageBathroom(Frame):
             os.system("python3 src\scene_bathroom.py" + sinkArg + toothbrushArg)
 
         btn = Button(
-            self, text="Run", command=lambda: click(sink.get(), toothbrush.get())
+            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(sink.get(), toothbrush.get())
         )
-        btn.pack()
+        btn.pack(pady=20)
 
 
 class PageOffice(Frame):
@@ -178,12 +178,11 @@ class PageOffice(Frame):
         cups = librarian.get_all_models_in_wnid("n03147509")  # cup
         CUP_NAMES = [record.name for record in cups if not record.do_not_use]
         CUP_NAMES.insert(0, "random")
-        print(CUP_NAMES)
         cup = StringVar()
         cup.set("random")
 
         cupLabel = LabelFrame(self, text="Select a cup", fg="blue", padx=20, pady=20)
-        cupLabel.pack()
+        cupLabel.pack(anchor=W, padx=20)
 
         for i in range(len(CUP_NAMES)):
             value=CUP_NAMES[i]
@@ -221,7 +220,7 @@ class PageOffice(Frame):
         fruit.set("random")
 
         fruitLabel = LabelFrame(self, text="Select a fruit", fg="blue", padx=20, pady=20)
-        fruitLabel.pack()
+        fruitLabel.pack(anchor=W, padx=20)
 
         for i in range(len(FRUITS)):
             text=FRUITS[i][0]
@@ -250,7 +249,7 @@ class PageOffice(Frame):
         bread.set("random")
 
         breadLabel = LabelFrame(self, text="Select a bread", fg="blue", padx=20, pady=20)
-        breadLabel.pack()
+        breadLabel.pack(anchor=W, padx=20)
 
         for i in range(len(BREADS)):
             text=BREADS[i][0]
@@ -289,9 +288,9 @@ class PageOffice(Frame):
             os.system("python3 src\scene_office.py" + cupArg + fruitArg + breadArg)
 
         btn = Button(
-            self, text="Run", command=lambda: click(cup.get(), fruit.get(), bread.get())
+            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get(), bread.get())
         )
-        btn.pack()
+        btn.pack(pady=20)
 
 
 if __name__ == "__main__":
