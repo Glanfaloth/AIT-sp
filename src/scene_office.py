@@ -1,15 +1,13 @@
 import numpy as np
 import random
-import os
 import argparse
 import constants
-import matplotlib.pyplot as plt
 from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.oculus_touch import OculusTouch
 from tdw.vr_data.oculus_touch_button import OculusTouchButton
-from tdw.librarian import ModelLibrarian, ModelRecord
+from tdw.librarian import ModelLibrarian
 from tdw.output_data import Bounds
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
@@ -20,7 +18,6 @@ parser.add_argument("--fruit", default="none")
 parser.add_argument("--book", default="none")
 parser.add_argument("--pen", default="none")
 args = parser.parse_args()
-
 
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
@@ -56,13 +53,13 @@ class OculusTouchTestScene(Controller):
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
+                {"$type": "set_render_quality", "render_quality": 0}
             ]
         )
         self.capture = ImageCapture(
             path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
         )
         self.add_ons.append(self.capture)
-        self.frame = 0
 
     def get_table_placement_coordinate(self, radius: float) -> float:
         q = float(random.uniform(0, 6 - radius))
@@ -280,15 +277,7 @@ class OculusTouchTestScene(Controller):
                         width=self.images.get_width(),
                         height=self.images.get_height(),
                     )
-                    path = os.path.join(
-                        self.path,
-                        "vr",
-                        "depth_value_" + TDWUtils.zero_padding(self.frame, 4) + ".png",
-                    )
-                    plt.imshow(depth_values)
-                    plt.savefig(path)
                     self.depth_value_dump.append(depth_values)
-            self.frame += 1
             self.communicate([])
         # Destroy the object.
         self.communicate(
@@ -317,13 +306,10 @@ class OculusTouchTestScene(Controller):
 
     def quit(self):
         self.simulation_done = True
-        self.frame = 0
         np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
 
     def end_trial(self):
         self.trial_done = True
-        self.frame = 0
-
 
 if __name__ == "__main__":
     c = OculusTouchTestScene()
