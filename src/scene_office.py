@@ -19,6 +19,7 @@ parser.add_argument("--book", default="none")
 parser.add_argument("--pen", default="none")
 args = parser.parse_args()
 
+
 class OculusTouchTestScene(Controller):
     librarian = ModelLibrarian()
 
@@ -53,7 +54,7 @@ class OculusTouchTestScene(Controller):
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
-                {"$type": "set_render_quality", "render_quality": 0}
+                {"$type": "set_render_quality", "render_quality": 0},
             ]
         )
         self.capture = ImageCapture(
@@ -183,15 +184,15 @@ class OculusTouchTestScene(Controller):
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
                 self.get_add_object(
-                model_name=args.cup,
-                object_id=cup_id,
-                position={
-                    "x": table_x - 0.3,
-                    "y": table_top[1],
-                    "z": table_z - 0.3,
-                },
-                rotation={"x": 0, "y": 0, "z": 0},
-            ),
+                    model_name=args.cup,
+                    object_id=cup_id,
+                    position={
+                        "x": table_x - 0.3,
+                        "y": table_top[1],
+                        "z": table_z - 0.3,
+                    },
+                    rotation={"x": 0, "y": 0, "z": 0},
+                ),
             ]
         )
         if args.fruit != "none":
@@ -310,6 +311,7 @@ class OculusTouchTestScene(Controller):
 
     def end_trial(self):
         self.trial_done = True
+
 
 if __name__ == "__main__":
     c = OculusTouchTestScene()

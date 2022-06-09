@@ -10,7 +10,7 @@ args = parser.parse_args()
 data = np.load(EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_" + args.scene + "/output.npy"))
 for i in range(len(data)):
     path = os.path.join(
-                        EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_office"),
+                        EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_" + args.scene),
                         "vr",
                         "depth_value_" + TDWUtils.zero_padding(i, 4) + ".png",
                     )
