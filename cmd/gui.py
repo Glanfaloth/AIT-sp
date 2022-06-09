@@ -341,7 +341,7 @@ class PageOffice(Frame):
             os.system("python3 src\scene_office.py" + cupArg + fruitArg + bookArg + penArg)
 
         btn = Button(
-            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get(), book.get())
+            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get(), book.get(), pen.get())
         )
         btn.pack(pady=20)
 
