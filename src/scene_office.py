@@ -17,6 +17,8 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 parser = argparse.ArgumentParser(description="add obj")
 parser.add_argument("--cup", default="cup")
 parser.add_argument("--fruit", default="none")
+parser.add_argument("--book", default="none")
+parser.add_argument("--pen", default="none")
 args = parser.parse_args()
 
 
@@ -149,6 +151,8 @@ class OculusTouchTestScene(Controller):
         mouse_id = self.get_unique_id()
         lamp_id = self.get_unique_id()
         fruit_id = self.get_unique_id()
+        book_id = self.get_unique_id()
+        pen_id = self.get_unique_id()
         self.communicate(
             [
                 self.get_add_object(
@@ -204,6 +208,32 @@ class OculusTouchTestScene(Controller):
                         "z": table_z + 0.1,
                     },
                     rotation={"x": 0, "y": 0, "z": 0},
+                ),
+            )
+        if args.book != "none":
+            self.communicate(
+                self.get_add_object(
+                    model_name=args.book,
+                    object_id=book_id,
+                    position={
+                        "x": table_x,
+                        "y": table_top[1],
+                        "z": table_z - 0.2,
+                    },
+                    rotation={"x": 0, "y": random.uniform(-360, 360), "z": 0},
+                ),
+            )
+        if args.pen != "none":
+            self.communicate(
+                self.get_add_object(
+                    model_name=args.pen,
+                    object_id=pen_id,
+                    position={
+                        "x": table_x + 0.3,
+                        "y": table_top[1],
+                        "z": table_z - 0.2,
+                    },
+                    rotation={"x": 0, "y": random.uniform(-360, 360), "z": 0},
                 ),
             )
         commands = []
@@ -269,6 +299,8 @@ class OculusTouchTestScene(Controller):
                 {"$type": "destroy_object", "id": mouse_id},
                 {"$type": "destroy_object", "id": lamp_id},
                 {"$type": "destroy_object", "id": fruit_id},
+                {"$type": "destroy_object", "id": book_id},
+                {"$type": "destroy_object", "id": pen_id},
             ]
         )
         for chair_id in chair_ids:

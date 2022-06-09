@@ -236,9 +236,84 @@ class PageOffice(Frame):
             img.grid(row = 0, column = i)
             Radiobutton(fruitLabel, text=text, variable=fruit, value=value).grid(row=1, column=i)
 
+        # select a book
+        BOOK_NAMES = [
+            "cgaxis_models_23_19_vray",
+            "cgaxis_models_65_06_vray",
+            "cgaxis_models_65_14_vray",
+            "holy_bible",
+        ]
+
+        BOOKS = [
+            ("random", "random"),
+            ("book1", "cgaxis_models_23_19_vray"),
+            ("book2", "cgaxis_models_65_06_vray"),
+            ("book3", "cgaxis_models_65_14_vray"),
+            ("book4", "holy_bible"),
+            ("none", "none"),
+        ]
+
+        book = StringVar()
+        book.set("random")
+
+        bookLabel = LabelFrame(self, text="Select a book", fg="blue", padx=20, pady=20)
+        bookLabel.pack(anchor=W, padx=20)
+
+        for i in range(len(BOOKS)):
+            text=BOOKS[i][0]
+            value=BOOKS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            elif value == 'none':
+                photo = ImageTk.PhotoImage(Image.open("img/none.jpg").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(bookLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(bookLabel, text=text, variable=book, value=value).grid(row=1, column=i)
+
+        # select a pen
+        PEN_NAMES = [
+            "b03_pen",
+            "b03_pen_01_001",
+            "b05_ball-point_pen-obj",
+            "b05_executive_pen",
+            "pencil_all",
+        ]
+
+        PENS = [
+            ("random", "random"),
+            ("pen1", "b03_pen"),
+            ("pen2", "b03_pen_01_001"),
+            ("pen3", "b05_ball-point_pen-obj"),
+            ("pen4", "b05_executive_pen"),
+            ("pen5", "pencil_all"),
+            ("none", "none"),
+        ]
+
+        pen = StringVar()
+        pen.set("random")
+
+        penLabel = LabelFrame(self, text="Select a pen", fg="blue", padx=20, pady=20)
+        penLabel.pack(anchor=W, padx=20)
+
+        for i in range(len(PENS)):
+            text=PENS[i][0]
+            value=PENS[i][1]
+            if value == 'random':
+                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
+            elif value == 'none':
+                photo = ImageTk.PhotoImage(Image.open("img/none.jpg").resize([100,100]))
+            else:
+                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
+            img = Label(penLabel, image=photo)
+            img.image=photo
+            img.grid(row = 0, column = i)
+            Radiobutton(penLabel, text=text, variable=pen, value=value).grid(row=1, column=i)
 
         # add a button to run the program
-        def click(cupValue, fruitValue):
+        def click(cupValue, fruitValue, bookValue, penValue):
             cupArg = ""
             if cupValue == "random":
                 cupValue = random.choice(CUP_NAMES)
@@ -251,11 +326,22 @@ class PageOffice(Frame):
                 fruitArg = " --fruit " + fruitValue
             elif fruitValue != "":
                 fruitArg = " --fruit " + fruitValue
-            breadArg = ""
-            os.system("python3 src\scene_office.py" + cupArg + fruitArg)
+            bookArg = ""
+            if bookValue == "random":
+                bookValue = random.choice(BOOK_NAMES)
+                bookArg = " --book " + bookValue
+            elif bookValue != "":
+                bookArg = " --book " + bookValue
+            penArg = ""
+            if penValue == "random":
+                penValue = random.choice(PEN_NAMES)
+                penArg = " --pen " + penValue
+            elif penValue != "":
+                penArg = " --pen " + penValue
+            os.system("python3 src\scene_office.py" + cupArg + fruitArg + bookArg + penArg)
 
         btn = Button(
-            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get())
+            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get(), book.get())
         )
         btn.pack(pady=20)
 
