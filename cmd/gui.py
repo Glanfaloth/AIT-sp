@@ -24,7 +24,7 @@ class TDWApp(Tk):
         self.title("Synthetic Data with ThreeDWorld")
         
         self.frames = {}
-        self.geometry("1024x768")
+        self.geometry("1024x1024")
         for F in (StartPage, PageBathroom, PageOffice):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
