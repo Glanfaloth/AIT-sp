@@ -62,19 +62,6 @@ class OculusTouchTestScene(Controller):
         self.add_ons.append(self.capture)
         self.frame = 0
 
-    @staticmethod
-    def get_longest_extent(record: ModelRecord) -> float:
-        left = TDWUtils.vector3_to_array(record.bounds["left"])
-        right = TDWUtils.vector3_to_array(record.bounds["right"])
-        front = TDWUtils.vector3_to_array(record.bounds["front"])
-        back = TDWUtils.vector3_to_array(record.bounds["back"])
-        left_right: float = np.linalg.norm(left - right)
-        front_back: float = np.linalg.norm(front - back)
-        if left_right > front_back:
-            return left_right
-        else:
-            return front_back
-
     def get_table_placement_coordinate(self, radius: float) -> float:
         q = float(random.uniform(0, 6 - radius))
         if random.random() < 0.5:
@@ -159,6 +146,7 @@ class OculusTouchTestScene(Controller):
         ]
         cup_id = self.get_unique_id()
         computer_id = self.get_unique_id()
+        mouse_id = self.get_unique_id()
         lamp_id = self.get_unique_id()
         fruit_id = self.get_unique_id()
         self.communicate(
@@ -167,11 +155,21 @@ class OculusTouchTestScene(Controller):
                     model_name="macbook_air",
                     object_id=computer_id,
                     position={
-                        "x": table_x + 0.2,
+                        "x": table_x + 0.1,
                         "y": table_top[1],
-                        "z": table_z,
+                        "z": table_z + 0.3,
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
+                ),
+                self.get_add_object(
+                    model_name="mouse_02_vray",
+                    object_id=mouse_id,
+                    position={
+                        "x": table_x + 0.4,
+                        "y": table_top[1],
+                        "z": table_z + 0.2,
+                    },
+                    rotation={"x": 0, "y": 0, "z": 0},
                 ),
                 self.get_add_object(
                     model_name=lamp.name,
@@ -183,6 +181,16 @@ class OculusTouchTestScene(Controller):
                     },
                     rotation={"x": 0, "y": 180, "z": 0},
                 ),
+                self.get_add_object(
+                model_name=args.cup,
+                object_id=cup_id,
+                position={
+                    "x": table_x - 0.3,
+                    "y": table_top[1],
+                    "z": table_z - 0.3,
+                },
+                rotation={"x": 0, "y": 0, "z": 0},
+            ),
             ]
         )
         if args.fruit != "none":
@@ -199,18 +207,6 @@ class OculusTouchTestScene(Controller):
                 ),
             )
         commands = []
-        commands.extend(
-            self.get_add_physics_object(
-                model_name=args.cup,
-                object_id=cup_id,
-                position={
-                    "x": table_x - 0.3,
-                    "y": table_top[1],
-                    "z": table_z - 0.3,
-                },
-                rotation={"x": 0, "y": 0, "z": 0},
-            ),
-        )
         chair_ids = []
         for chair_position in chair_positions:
             object_id = self.get_unique_id()
@@ -270,6 +266,7 @@ class OculusTouchTestScene(Controller):
                 {"$type": "destroy_object", "id": table_id},
                 {"$type": "destroy_object", "id": cup_id},
                 {"$type": "destroy_object", "id": computer_id},
+                {"$type": "destroy_object", "id": mouse_id},
                 {"$type": "destroy_object", "id": lamp_id},
                 {"$type": "destroy_object", "id": fruit_id},
             ]
