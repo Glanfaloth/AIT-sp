@@ -236,37 +236,9 @@ class PageOffice(Frame):
             img.grid(row = 0, column = i)
             Radiobutton(fruitLabel, text=text, variable=fruit, value=value).grid(row=1, column=i)
 
-        # select a bread
-        BREAD_NAMES = ["bread", "b03_loafbread", "b03_burger"]
-        BREADS = [
-            ("random", "random"),
-            ("bread", "bread"),
-            ("loafbread", "b03_loafbread"),
-            ("burger", "b03_burger"),
-            ("none", "none"),
-        ]
-        bread = StringVar()
-        bread.set("random")
-
-        breadLabel = LabelFrame(self, text="Select a bread", fg="blue", padx=20, pady=20)
-        breadLabel.pack(anchor=W, padx=20)
-
-        for i in range(len(BREADS)):
-            text=BREADS[i][0]
-            value=BREADS[i][1]
-            if value == 'random':
-                photo = ImageTk.PhotoImage(Image.open("img/random.png").resize([100,100]))
-            elif value == 'none':
-                photo = ImageTk.PhotoImage(Image.open("img/none.jpg").resize([100,100]))
-            else:
-                photo = ImageTk.PhotoImage(Image.open("img/" + value + ".jpg").resize([100,100]))
-            img = Label(breadLabel, image=photo)
-            img.image=photo
-            img.grid(row = 0, column = i)
-            Radiobutton(breadLabel, text=text, variable=bread, value=value).grid(row=1, column=i)
 
         # add a button to run the program
-        def click(cupValue, fruitValue, breadValue):
+        def click(cupValue, fruitValue):
             cupArg = ""
             if cupValue == "random":
                 cupValue = random.choice(CUP_NAMES)
@@ -280,15 +252,10 @@ class PageOffice(Frame):
             elif fruitValue != "":
                 fruitArg = " --fruit " + fruitValue
             breadArg = ""
-            if breadValue == "random":
-                breadValue = random.choice(BREAD_NAMES)
-                breadArg = " --bread " + breadValue
-            elif breadValue != "":
-                breadArg = " --bread " + breadValue
-            os.system("python3 src\scene_office.py" + cupArg + fruitArg + breadArg)
+            os.system("python3 src\scene_office.py" + cupArg + fruitArg)
 
         btn = Button(
-            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get(), bread.get())
+            self, text="Run", font=tkfont.Font(size=30), command=lambda: click(cup.get(), fruit.get())
         )
         btn.pack(pady=20)
 

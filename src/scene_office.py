@@ -17,7 +17,6 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 parser = argparse.ArgumentParser(description="add obj")
 parser.add_argument("--cup", default="cup")
 parser.add_argument("--fruit", default="none")
-parser.add_argument("--bread", default="none")
 args = parser.parse_args()
 
 
@@ -162,7 +161,6 @@ class OculusTouchTestScene(Controller):
         computer_id = self.get_unique_id()
         lamp_id = self.get_unique_id()
         fruit_id = self.get_unique_id()
-        bread_id = self.get_unique_id()
         self.communicate(
             [
                 self.get_add_object(
@@ -198,19 +196,6 @@ class OculusTouchTestScene(Controller):
                         "z": table_z + 0.1,
                     },
                     rotation={"x": 0, "y": 0, "z": 0},
-                ),
-            )
-        if args.bread != "none":
-            self.communicate(
-                self.get_add_object(
-                    model_name=args.bread,
-                    object_id=bread_id,
-                    position={
-                        "x": table_x - 0.2,
-                        "y": table_top[1],
-                        "z": table_z - 0.1,
-                    },
-                    rotation={"x": 0, "y": 90, "z": 0},
                 ),
             )
         commands = []
