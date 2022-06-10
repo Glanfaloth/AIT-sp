@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Glanfaloth/sptdwait">
-    <img src="img/logo-ait.png" alt="Logo">
+    <a href="https://ait.ethz.ch/"><img src="img/logo-ait.png" alt="Logo"></a>
   </a>
 
   <h3 align="center">Synthesis of Egocentric View for Dynamic Object Tracking</h3>
@@ -41,7 +41,72 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural generierten Objekten zu erzeugen. Eine einfache GUI wurde erzeugt, um Szeneneinstellungen anzupassen oder zu randomisieren. Mit einem Oculus Quest Headset und Controllern, können Nutzer mit den Objekten in einer VR Szene mit virtuellen Händen interagieren, während Bildsequenzen, in Form von RGB, Tiefe und Segmentierungsmaske, automatisch gerendert werden.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### Built With
+
+* [ThreeDWorld]([https://nextjs.org/](https://github.com/threedworld-mit/tdw))
+* [tkinter]([https://reactjs.org/](https://docs.python.org/3/library/tkinter.html))
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
+
+* Windows10
+* [A compatible GPU](https://support.oculus.com/articles/headsets-and-accessories/oculus-link/oculus-link-compatibility/)
+* Oculus headset (Rift, Rift S, Quest, or Quest 2)
+* *Quest and Quest 2:* An Oculus Link Cable
+  - A USB-C port
+* [The Oculus PC app](https://www.oculus.com/setup/)
+* Python 3.6+
+* tdw
+  ```sh
+  pip3 install tdw --user
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/Glanfaloth/sptdwait.git
+   ```
+3. Go to the repo
+   ```sh
+   cd sptdwait
+   ```
+4. Run `gui.py`
+   ```sh
+   python3 .\cmd\gui.py
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* [ThreeDWorld]([https://nextjs.org/](https://github.com/threedworld-mit/tdw))
+
+<p align="right">(<a href="#top">back to top</a>)</p>
