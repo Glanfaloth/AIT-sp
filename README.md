@@ -11,7 +11,6 @@
   <h3 align="center">Synthesis of Egocentric View for Dynamic Object Tracking</h3>
 
   <p align="center">
-    Using <a href="https://github.com/threedworld-mit/tdw">ThreeDWorld</a>
     <br />
     <br />
     <br />
