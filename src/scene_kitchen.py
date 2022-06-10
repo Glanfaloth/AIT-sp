@@ -1,5 +1,4 @@
 import numpy as np
-import random
 import os
 import argparse
 from json import loads
@@ -11,8 +10,6 @@ from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
 from tdw.add_ons.oculus_touch import OculusTouch
 from tdw.vr_data.oculus_touch_button import OculusTouchButton
-from tdw.librarian import ModelLibrarian, ModelRecord
-from tdw.output_data import Bounds
 from tdw.add_ons.image_capture import ImageCapture
 from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 from tdw.backend.platforms import SYSTEM_TO_S3
@@ -68,7 +65,6 @@ class OculusTouchBathroomScene(Controller):
             path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
         )
         self.add_ons.append(self.capture)
-        self.frame = 0
 
     def trial(self) -> None:
         self.vr.reset()
@@ -86,15 +82,7 @@ class OculusTouchBathroomScene(Controller):
                         width=self.images.get_width(),
                         height=self.images.get_height(),
                     )
-                    path = os.path.join(
-                        self.path,
-                        "vr",
-                        "depth_value_" + TDWUtils.zero_padding(self.frame, 4) + ".png",
-                    )
-                    plt.imshow(depth_values)
-                    plt.savefig(path)
                     self.depth_value_dump.append(depth_values)
-            self.frame += 1
             self.communicate([])
         self.communicate(
            {"$type": "destroy_all_objects"}
@@ -107,13 +95,10 @@ class OculusTouchBathroomScene(Controller):
 
     def quit(self):
         self.simulation_done = True
-        self.frame = 0
         np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
 
     def end_trial(self):
         self.trial_done = True
-        self.frame = 0
-
 
 if __name__ == "__main__":
     c = OculusTouchBathroomScene()

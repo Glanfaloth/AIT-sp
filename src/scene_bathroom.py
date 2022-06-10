@@ -1,8 +1,6 @@
 import numpy as np
 import random
-import os
 import argparse
-import matplotlib.pyplot as plt
 from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
@@ -60,7 +58,6 @@ class OculusTouchBathroomScene(Controller):
             path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
         )
         self.add_ons.append(self.capture)
-        self.frame = 0
 
     def trial(self) -> None:
         self.vr.reset()
@@ -177,15 +174,7 @@ class OculusTouchBathroomScene(Controller):
                         width=self.images.get_width(),
                         height=self.images.get_height(),
                     )
-                    path = os.path.join(
-                        self.path,
-                        "vr",
-                        "depth_value_" + TDWUtils.zero_padding(self.frame, 4) + ".png",
-                    )
-                    plt.imshow(depth_values)
-                    plt.savefig(path)
                     self.depth_value_dump.append(depth_values)
-            self.frame += 1
             self.communicate([])
         self.communicate(
             [
@@ -205,13 +194,10 @@ class OculusTouchBathroomScene(Controller):
 
     def quit(self):
         self.simulation_done = True
-        self.frame = 0
         np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
 
     def end_trial(self):
         self.trial_done = True
-        self.frame = 0
-
 
 if __name__ == "__main__":
     c = OculusTouchBathroomScene()
