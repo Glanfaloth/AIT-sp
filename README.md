@@ -69,7 +69,6 @@ Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural gen
 * [A compatible GPU](https://support.oculus.com/articles/headsets-and-accessories/oculus-link/oculus-link-compatibility/)
 * Oculus headset (Rift, Rift S, Quest, or Quest 2)
 * *Quest and Quest 2:* An Oculus Link Cable
-  - A USB-C port
 * [The Oculus PC app](https://www.oculus.com/setup/)
 * Python 3.6+
 * tdw
@@ -83,11 +82,13 @@ Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural gen
    ```sh
    git clone https://github.com/Glanfaloth/sptdwait.git
    ```
-3. Go to the repo
+2. Connect Oculus Headset to your PC with an Oculus Link Cable
+3. Run the Oculus PC app
+5. Go to the repo
    ```sh
    cd sptdwait
    ```
-4. Run `gui.py`
+6. Run `gui.py`
    ```sh
    python3 .\cmd\gui.py
    ```
@@ -96,6 +97,9 @@ Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural gen
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
+The results are stored in TODO
+Convert the depth value to depth maps using TODO
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
