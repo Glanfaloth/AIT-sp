@@ -90,7 +90,7 @@ Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural gen
    ```
 6. Run `gui.py`
    ```sh
-   python3 .\cmd\gui.py
+   python3 .\utils\gui.py
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
