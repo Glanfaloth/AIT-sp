@@ -123,7 +123,7 @@ class OculusTouchBathroomScene(Controller):
                     position={
                         "x": sink_left[0] - 0.1 * i - 0.1,
                         "y": sink_top[1],
-                        "z": sink_back[2] - 0.1,
+                        "z": sink_back[2] - 0.2,
                     },
                     rotation={"x": 0, "y": float(random.uniform(-360, 360)), "z": 0},
                     object_id=bottle_id,
