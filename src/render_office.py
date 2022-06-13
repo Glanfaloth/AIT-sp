@@ -35,10 +35,7 @@ class RenderOfficeScene(Controller):
                            look_at={"x": 0, "y": 0, "z": 0},
                            avatar_id="a")
         self.add_ons.extend([self.camera])
-        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_office")
-        self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
-            "scene_office/output.npy"
-        )
+        self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("render_office")
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
