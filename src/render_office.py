@@ -2,11 +2,9 @@ import numpy as np
 import random
 import argparse
 import constants
-from typing import List
 from tdw.controller import Controller
 from tdw.tdw_utils import TDWUtils
-from tdw.add_ons.oculus_touch import OculusTouch
-from tdw.vr_data.oculus_touch_button import OculusTouchButton
+from tdw.add_ons.third_person_camera import ThirdPersonCamera
 from tdw.librarian import ModelLibrarian
 from tdw.output_data import Bounds
 from tdw.add_ons.image_capture import ImageCapture
@@ -20,7 +18,7 @@ parser.add_argument("--pen", default="none")
 args = parser.parse_args()
 
 
-class OculusTouchOfficeScene(Controller):
+class RenderOfficeScene(Controller):
     librarian = ModelLibrarian()
 
     TABLES = constants.TABLES
@@ -33,20 +31,10 @@ class OculusTouchOfficeScene(Controller):
         super().__init__(
             port=port, check_version=check_version, launch_build=launch_build
         )
-        self.simulation_done = False
-        self.trial_done = False
-        self.vr = OculusTouch(set_graspable=False, attach_avatar=True)
-        # Quit when the left trigger button is pressed.
-        self.vr.listen_to_button(
-            button=OculusTouchButton.trigger_button, is_left=True, function=self.quit
-        )
-        # End the trial when the right trigger button is pressed.
-        self.vr.listen_to_button(
-            button=OculusTouchButton.trigger_button,
-            is_left=False,
-            function=self.end_trial,
-        )
-        self.add_ons.extend([self.vr])
+        self.camera = ThirdPersonCamera(position={"x": -1.5, "y": 0.8, "z": 0},
+                           look_at={"x": 0, "y": 0, "z": 0},
+                           avatar_id="a")
+        self.add_ons.extend([self.camera])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("scene_office")
         self.depth_output = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath(
             "scene_office/output.npy"
@@ -58,7 +46,7 @@ class OculusTouchOfficeScene(Controller):
             ]
         )
         self.capture = ImageCapture(
-            path=self.path, avatar_ids=["vr"], pass_masks=["_img", "_id", "_depth"]
+            path=self.path, avatar_ids=["a"], pass_masks=["_img"]
         )
         self.add_ons.append(self.capture)
 
@@ -81,14 +69,11 @@ class OculusTouchOfficeScene(Controller):
         chair_position[1] = 0
         return chair_position
 
-    def trial(self) -> None:
-        self.vr.reset()
-        # Start a new trial.
-        self.trial_done = False
+    def run(self) -> None:
         # Choose a random model.
-        table = random.choice(OculusTouchOfficeScene.TABLES)
-        chair = random.choice(OculusTouchOfficeScene.CHAIRS)
-        lamp = random.choice(OculusTouchOfficeScene.LAMPS)
+        table = random.choice(RenderOfficeScene.TABLES)
+        chair = random.choice(RenderOfficeScene.CHAIRS)
+        lamp = random.choice(RenderOfficeScene.LAMPS)
         table_x = 0
         table_z = 0.5
         table_id = self.get_unique_id()
@@ -264,22 +249,6 @@ class OculusTouchOfficeScene(Controller):
 
         self.communicate(commands)
 
-        self.depth_value_dump: List[np.array] = list()
-
-        # Wait until the trial is done.
-        while not self.trial_done and not self.simulation_done:
-            self.images = self.capture.images["vr"]
-            for i in range(self.images.get_num_passes()):
-                if self.images.get_pass_mask(i) == "_depth":
-                    # Get the depth values.
-                    depth_values = TDWUtils.get_depth_values(
-                        self.images.get_image(i),
-                        depth_pass="_depth",
-                        width=self.images.get_width(),
-                        height=self.images.get_height(),
-                    )
-                    self.depth_value_dump.append(depth_values)
-            self.communicate([])
         # Destroy the object.
         self.communicate(
             [
@@ -297,22 +266,9 @@ class OculusTouchOfficeScene(Controller):
             self.communicate(
                 {"$type": "destroy_object", "id": chair_id},
             )
-
-    def run(self) -> None:
-        while not self.simulation_done:
-            # Run a trial.
-            self.trial()
-        # End the simulation.
         self.communicate({"$type": "terminate"})
-
-    def quit(self):
-        self.simulation_done = True
-        np.save(str(self.depth_output.resolve())[:-4], np.array(self.depth_value_dump))
-
-    def end_trial(self):
-        self.trial_done = True
-
+        
 
 if __name__ == "__main__":
-    c = OculusTouchOfficeScene()
+    c = RenderOfficeScene()
     c.run()
