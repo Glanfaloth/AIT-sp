@@ -52,6 +52,7 @@ class OculusTouchKitchenScene(Controller):
     def trial(self) -> None:
         self.vr.reset()
         self.trial_done = False
+        self.communicate({"$type": "set_render_quality", "render_quality": 0})
         self.communicate(self.init_commands)
         self.depth_value_dump: List[np.array] = list()
 

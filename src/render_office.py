@@ -12,9 +12,9 @@ from tdw.backend.paths import EXAMPLE_CONTROLLER_OUTPUT_PATH
 
 parser = argparse.ArgumentParser(description="add obj")
 parser.add_argument("--cup", default="cup")
-parser.add_argument("--fruit", default="none")
-parser.add_argument("--book", default="none")
-parser.add_argument("--pen", default="none")
+parser.add_argument("--fruit", default="orange")
+parser.add_argument("--book", default="holy_bible")
+parser.add_argument("--pen", default="pencil_all")
 args = parser.parse_args()
 
 
@@ -31,15 +31,18 @@ class RenderOfficeScene(Controller):
         super().__init__(
             port=port, check_version=check_version, launch_build=launch_build
         )
-        self.camera = ThirdPersonCamera(position={"x": -1.5, "y": 0.8, "z": 0},
-                           look_at={"x": 0, "y": 0, "z": 0},
-                           avatar_id="a")
+        self.camera = ThirdPersonCamera(
+            position={"x": -1.5, "y": 1.5, "z": -2},
+            look_at={"x": 1.5, "y": 0, "z": 4},
+            avatar_id="a",
+        )
         self.add_ons.extend([self.camera])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("render_office")
         self.communicate(
             [
                 TDWUtils.create_empty_room(12, 12),
-                {"$type": "set_render_quality", "render_quality": 0},
+                {"$type": "set_render_quality", "render_quality": 5},
+                {"$type": "set_screen_size", "width": 1024, "height": 768},
             ]
         )
         self.capture = ImageCapture(
@@ -264,7 +267,7 @@ class RenderOfficeScene(Controller):
                 {"$type": "destroy_object", "id": chair_id},
             )
         self.communicate({"$type": "terminate"})
-        
+
 
 if __name__ == "__main__":
     c = RenderOfficeScene()

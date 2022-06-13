@@ -68,8 +68,6 @@ class OculusTouchBathroomScene(Controller):
 
         resp = self.communicate(
             [
-                # TDWUtils.create_empty_room(12, 12),
-                self.get_add_scene(scene_name="monkey_physics_room"),
                 {
                     "$type": "add_object",
                     "name": args.sink,

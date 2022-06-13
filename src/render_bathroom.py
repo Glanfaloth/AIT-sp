@@ -29,14 +29,18 @@ class RenderBathroomScene(Controller):
         super().__init__(
             port=port, check_version=check_version, launch_build=launch_build
         )
-        self.camera = ThirdPersonCamera(position={"x": -1.5, "y": 0.8, "z": 0},
-                           look_at={"x": 0, "y": 0, "z": 0},
-                           avatar_id="a")
+        self.camera = ThirdPersonCamera(
+            position={"x": -1.5, "y": 1.5, "z": -2},
+            look_at={"x": 1.5, "y": 0, "z": 4},
+            avatar_id="a",
+        )
         self.add_ons.extend([self.camera])
         self.path = EXAMPLE_CONTROLLER_OUTPUT_PATH.joinpath("render_bathroom")
         self.communicate(
             [
                 self.get_add_scene(scene_name="monkey_physics_room"),
+                {"$type": "set_render_quality", "render_quality": 5},
+                {"$type": "set_screen_size", "width": 1024, "height": 768},
             ]
         )
         self.capture = ImageCapture(
@@ -51,8 +55,7 @@ class RenderBathroomScene(Controller):
 
         resp = self.communicate(
             [
-                # TDWUtils.create_empty_room(12, 12),
-                self.get_add_scene(scene_name="monkey_physics_room"),
+                
                 {
                     "$type": "add_object",
                     "name": args.sink,
