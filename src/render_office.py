@@ -50,12 +50,6 @@ class RenderOfficeScene(Controller):
         )
         self.add_ons.append(self.capture)
 
-    def get_table_placement_coordinate(self, radius: float) -> float:
-        q = float(random.uniform(0, 6 - radius))
-        if random.random() < 0.5:
-            q *= -1
-        return q
-
     def get_chair_position(
         self, table_center: np.array, table_bound_point: np.array
     ) -> np.array:
