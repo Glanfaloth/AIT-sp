@@ -101,10 +101,7 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
    ```
 2. Connect Oculus Headset to your PC with an Oculus Link Cable
 3. Run the Oculus PC app
-5. Go to the repo
-   ```sh
-   cd sptdwait
-   ```
+5. CD to the repo
 6. Run `gui.py`
    ```sh
    python3 .\utils\gui.py
@@ -115,12 +112,12 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The results are stored in TODO
-Convert the depth value to depth maps using TODO
+The results are stored in `tdw_example_controller_output` folder of the home directory
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Convert the depth value to depth maps using `loadnpy.py`
+```sh
+python3 .\utils\loadnpy.py --scene {scene_name} --name {sequence_name}
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
