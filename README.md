@@ -47,7 +47,7 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
 
 <details>
   <summary>FR</summary>
-  Ce projet utilise ThreeDWorld pour créer plusieurs scènes virtuelles avec des objets générés de manière procédurale. Une GUI simple est conçue pour personnaliser et randomiser les paramètres de la scène. Avec un casque et des contrôleurs Oculus Quest, les utilisateurs peuvent interagir avec les objets dans un environnement de réalité virtuelle en utilisant des mains virtuelles, tandis que les séquences d'images seront automatiquement rendues, y compris le RVB, la carte de disparité et le masque de segmentation.
+  Ce projet utilise ThreeDWorld pour créer plusieurs scènes virtuelles avec des objets générés de manière procédurale. Une GUI simple est conçue pour personnaliser et randomiser les paramètres de la scène. À l'aide d'un casque et des contrôleurs Oculus Quest, les utilisateurs peuvent interagir avec les objets dans un environnement de réalité virtuelle en utilisant des mains virtuelles, tandis que les séquences d'images seront automatiquement rendues, y compris le RVB, la carte de disparité et le masque de segmentation.
 </details>
 
 <details>
