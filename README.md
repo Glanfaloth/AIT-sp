@@ -55,6 +55,8 @@ IT: Questo progetto utilizza ThreeDWorld per creare diverse scene virtuali con o
 
 CN: 本项目运用ThreeDWorld创建了带有过程生成物品的若干虚拟场景，设计了用于自定义或随机设置场景的图形用户界面。通过Oculus Quest头戴设备和控制手柄，用户可在虚拟现实场景中用虚拟手与物品交互，同时渲染出一系列场景的RGB图、深度图和分割图。
 
+JP: このプロジェクトは、ThreedWorldを使用して、いくつかの仮想シーンを手続き型生成されたオブジェクトを作成します。シンプルなGUIをカスタマイズし、シーンの設定をランダムに設計されます。Oculus Questヘッドセットとコントローラで、ユーザーは仮想の手を使っているバーチャル・リアリティの環境でオブジェクトと操作することができます。その一方で、イメージシーケンスはRGB、深さとセグメンテーション・マスクを含む自動的に提出されます。
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
