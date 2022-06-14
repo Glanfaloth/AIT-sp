@@ -93,7 +93,7 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
   pip3 install tdw --user
   ```
 
-### Installation
+### Usage
 
 1. Clone the repo
    ```sh
@@ -106,18 +106,11 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
    ```sh
    python3 .\utils\gui.py
    ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-The results are stored in `tdw_example_controller_output` folder of the home directory
-
-Convert the depth value to depth maps using `loadnpy.py`
-```sh
-python3 .\utils\loadnpy.py --scene {scene_name} --name {sequence_name}
-```
+7. Quit the program by pressing the left trigger button. The results will be stored in `tdw_example_controller_output` folder of the home directory.
+8. Convert the depth value to depth maps using `loadnpy.py`
+  ```sh
+  python3 .\utils\loadnpy.py --scene {scene_name} --name {sequence_name}
+  ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
