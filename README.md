@@ -1,4 +1,5 @@
 # sptdwait
+
 <div id="top"></div>
 
 <!-- PROJECT LOGO -->
@@ -6,18 +7,10 @@
 <div align="center">
   <a href="https://github.com/Glanfaloth/sptdwait">
   </a>
-
   <h3 align="center">Synthesis of Egocentric View for Dynamic Object Tracking</h3>
-
-  <p align="center">
-    <br />
-    <br />
-    <br />
-    <a href="https://youtu.be/z2y0obcq0Tw">View Demo (TODO)</a>
-    ·
-    <a href="https://github.com/Glanfaloth/sptdwait/issues">Report Bug</a>
-  </p>
 </div>
+
+[![Demo](http://img.youtube.com/vi/z2y0obcq0Tw/0.jpg)](http://www.youtube.com/watch?v=z2y0obcq0Tw "AIT")
 
 
 
