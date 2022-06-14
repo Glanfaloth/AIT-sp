@@ -51,6 +51,8 @@ EN: This project utilizes ThreeDWorld to create several virtual scenes with proc
 
 DE: Dieses Projekt nutzt ThreeDWorld, um diverse virtuelle Szenen mit prozedural generierten Objekten zu erzeugen. Eine einfache GUI wurde erzeugt, um Szeneneinstellungen anzupassen oder zu randomisieren. Mit einem Oculus Quest Headset und Controllern, können Nutzer mit den Objekten in einer VR Szene mit virtuellen Händen interagieren, während Bildsequenzen, in Form von RGB, Tiefe und Segmentierungsmaske, automatisch gerendert werden.
 
+IT: Questo progetto utilizza ThreeDWorld per creare diverse scene virtuali con oggetti generati proceduralmente. Una semplice GUI è stata disegnata per personalizzare e randomizzare le impostazioni della scena. Attraverso un headset Oculus Quest e i controller, l'utilizzatore può interagire con gli oggetti nell'ambiente nella realtà virtuale usando mani virtuali, mentre la sequenza di immagini viene automaticamente renderizzata, includendo i colori, la profondità e la maschera di segmentazione.
+
 CN: 本项目运用ThreeDWorld创建了带有过程生成物品的若干虚拟场景，设计了用于自定义或随机设置场景的图形用户界面。通过Oculus Quest头戴设备和控制手柄，用户可在虚拟现实场景中用虚拟手与物品交互，同时渲染出一系列场景的RGB图、深度图和分割图。
 
 <p align="right">(<a href="#top">back to top</a>)</p>
