@@ -8,11 +8,10 @@
   <a href="https://github.com/Glanfaloth/sptdwait">
   </a>
   <h3 align="center">Synthesis of Egocentric View for Dynamic Object Tracking</h3>
+  <a href="http://www.youtube.com/watch?v=z2y0obcq0Tw" target="_blank">
+    <img src="http://img.youtube.com/vi/z2y0obcq0Tw/0.jpg" alt="AIT"/>
+  </a>
 </div>
-
-[![Demo](http://img.youtube.com/vi/z2y0obcq0Tw/0.jpg)](http://www.youtube.com/watch?v=z2y0obcq0Tw "AIT")
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
