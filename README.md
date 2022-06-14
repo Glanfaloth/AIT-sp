@@ -5,7 +5,6 @@
 <br />
 <div align="center">
   <a href="https://github.com/Glanfaloth/sptdwait">
-    <a href="https://ait.ethz.ch/"><img src="img/logo-ait.png" alt="Logo"></a>
   </a>
 
   <h3 align="center">Synthesis of Egocentric View for Dynamic Object Tracking</h3>
@@ -14,7 +13,7 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/Glanfaloth/sptdwait">View Demo (TODO)</a>
+    <a href="https://youtu.be/z2y0obcq0Tw">View Demo (TODO)</a>
     ·
     <a href="https://github.com/Glanfaloth/sptdwait/issues">Report Bug</a>
   </p>
