@@ -57,6 +57,8 @@ CN: 本项目运用ThreeDWorld创建了带有过程生成物品的若干虚拟�
 
 JP: このプロジェクトは、ThreedWorldを使用して、いくつかの仮想シーンを手続き型生成されたオブジェクトを作成します。シンプルなGUIをカスタマイズし、シーンの設定をランダムに設計されます。Oculus Questヘッドセットとコントローラで、ユーザーは仮想の手を使っているバーチャル・リアリティの環境でオブジェクトと操作することができます。その一方で、イメージシーケンスはRGB、深さとセグメンテーション・マスクを含む自動的に提出されます。
 
+SD: S projekt brucht ThreeDWorld um verschiedeni virtuelli szene mit prozedural generierte objekt z erzüge. E eifachi GUI isch erzügt worde um szeneiistellige azpasse oder z randomisiere. Mit emene Oculus Quest Headset und controller chönd benützer mit de objekt inere VR szene mit virtuelle händ interagiere während bildsequenze in form vo RGB, tüfi und segmentierigsmaske automatisch grendert werdet.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
