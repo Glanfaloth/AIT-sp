@@ -18,3 +18,4 @@ for i in range(len(data)):
                     )
     plt.imshow(data[i])
     plt.savefig(path)
+    plt.close()
